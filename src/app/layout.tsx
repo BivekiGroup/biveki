@@ -23,7 +23,6 @@ export default function RootLayout({
     <html lang="ru">
       <body className={`antialiased font-sans`}>
         <div className="relative min-h-dvh bg-background text-foreground">
-          <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(250px_150px_at_20%_10%,oklch(0.97_0_0)_0%,transparent_60%),radial-gradient(250px_150px_at_80%_0%,oklch(0.97_0_0)_0%,transparent_60%)]" />
           <Header />
           <main className="relative">{children}</main>
           <Footer />

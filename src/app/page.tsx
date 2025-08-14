@@ -9,13 +9,38 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-10 pb-14">
+      <section className="relative overflow-hidden">
+        {/* Brand hero gradient decor */}
+        <div aria-hidden className="absolute inset-0 -z-10">
+          <div
+            className="absolute left-1/2 -top-24 h-[520px] w-[820px] -translate-x-1/2 rounded-full blur-3xl opacity-35"
+            style={{
+              background:
+                "radial-gradient(45% 60% at 50% 50%, oklch(0.82 0.22 278 / 0.75) 0%, transparent 70%)",
+            }}
+          />
+          <div
+            className="absolute -left-24 top-10 h-[380px] w-[380px] rounded-full blur-2xl opacity-25"
+            style={{
+              background:
+                "radial-gradient(60% 60% at 50% 50%, oklch(0.72 0.16 240 / 0.7) 0%, transparent 70%)",
+            }}
+          />
+          <div
+            className="absolute -right-24 top-24 h-[380px] w-[380px] rounded-full blur-2xl opacity-25"
+            style={{
+              background:
+                "radial-gradient(60% 60% at 50% 50%, oklch(0.72 0.18 305 / 0.7) 0%, transparent 70%)",
+            }}
+          />
+          <div className="absolute inset-x-0 top-[440px] h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-60" />
+        </div>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-16 pb-20">
           <div className="flex flex-col items-center text-center gap-6">
             <Badge className="animate-in fade-in slide-in-from-top-2 duration-700" variant="secondary">
               Веб‑разработка по подписке
             </Badge>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight leading-[1.05]">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight leading-[1.05] bg-gradient-to-br from-[oklch(0.9_0.22_278)] to-[oklch(0.9_0.18_240)] bg-clip-text text-transparent">
               Современные сайты и продукты за фиксированную ежемесячную плату
             </h1>
             <p className="max-w-2xl text-muted-foreground text-base sm:text-lg">
