@@ -1,37 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Biveki Website
 
-## Getting Started
+Landing page for **Biveki**, a company that builds modern web applications on a subscription model. The site uses Next.js, Tailwind CSS and lightweight components inspired by shadcn.
 
-First, run the development server:
+## Image Generation Prompts
+
+Use these prompts to generate custom imagery for the placeholders used in the site:
+
+1. **Hero Section** – "Futuristic blue-themed office with developers collaborating on holographic interfaces, wide shot, cinematic lighting, 16:9 aspect ratio."
+2. **Unlimited Iterations Feature** – "Abstract blue circular arrows around a web interface, symbolizing unlimited iterations, 1:1 aspect ratio."
+3. **Fast Turnaround Feature** – "Blue stopwatch blended with coding elements to represent fast delivery, 1:1 aspect ratio."
+4. **Dedicated Team Feature** – "Friendly team of developers in a modern blue-accented office, smiling and coding together, 1:1 aspect ratio."
+
+Replace the placeholder images in `src/app/page.tsx` with your generated assets.
+
+## Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Lint
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run lint
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Build
 
-## Learn More
+```bash
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# biveki

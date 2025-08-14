@@ -1,103 +1,151 @@
 import Image from "next/image";
+import Link from "next/link";
+import { Button, buttonBase, buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div>
+      {/* Hero Section */}
+      <section className="mx-auto flex max-w-6xl flex-col items-center justify-center gap-8 py-24 text-center">
+        <h1 className="text-4xl font-bold sm:text-6xl animate-fade-in-up">Biveki</h1>
+        <p className="max-w-2xl text-lg text-blue-200 animate-fade-in-up">
+          Subscription-based web app development delivered by a dedicated team.
+        </p>
+        <div className="mt-4 flex gap-4 animate-fade-in-up">
+          <Link
+            href="#pricing"
+            className={cn(buttonBase, buttonVariants.default)}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            View Plans
+          </Link>
+          <Link
+            href="#contact"
+            className={cn(buttonBase, buttonVariants.outline)}
           >
-            Read our docs
-          </a>
+            Contact Us
+          </Link>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <div className="mt-12 w-full animate-fade-in-up">
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            src="https://placehold.co/1200x600/1e3a8a/ffffff?text=Hero+Image"
+            alt="Futuristic blue workspace representing collaborative web development"
+            width={1200}
+            height={600}
+            className="w-full rounded-lg shadow-lg"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          {/* Image Prompt: "Futuristic blue-themed office with developers collaborating on holographic interfaces, wide shot, cinematic lighting, 16:9 aspect ratio" */}
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="mx-auto max-w-6xl py-24">
+        <h2 className="mb-12 text-center text-3xl font-semibold">Why Biveki</h2>
+        <div className="grid gap-8 sm:grid-cols-3">
+          <Card className="animate-fade-in-up">
+            <Image
+              src="https://placehold.co/100x100/1e3a8a/ffffff?text=Loop"
+              alt="Infinite iteration illustration"
+              width={100}
+              height={100}
+              className="mb-4"
+            />
+            {/* Image Prompt: "Abstract blue circular arrows around a web interface, symbolizing unlimited iterations, 1:1 aspect ratio" */}
+            <h3 className="mb-2 text-xl font-medium">Unlimited Iterations</h3>
+            <p className="text-sm text-blue-200">
+              Iterate on your product endlessly with one flat subscription.
+            </p>
+          </Card>
+          <Card className="animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+            <Image
+              src="https://placehold.co/100x100/1e3a8a/ffffff?text=Speed"
+              alt="Fast turnaround illustration"
+              width={100}
+              height={100}
+              className="mb-4"
+            />
+            {/* Image Prompt: "Blue stopwatch blended with coding elements to represent fast delivery, 1:1 aspect ratio" */}
+            <h3 className="mb-2 text-xl font-medium">Fast Turnaround</h3>
+            <p className="text-sm text-blue-200">
+              Receive updates and features at a rapid pace.
+            </p>
+          </Card>
+          <Card className="animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+            <Image
+              src="https://placehold.co/100x100/1e3a8a/ffffff?text=Team"
+              alt="Dedicated team illustration"
+              width={100}
+              height={100}
+              className="mb-4"
+            />
+            {/* Image Prompt: "Friendly team of developers in a modern blue-accented office, smiling and coding together, 1:1 aspect ratio" */}
+            <h3 className="mb-2 text-xl font-medium">Dedicated Team</h3>
+            <p className="text-sm text-blue-200">
+              Work with professionals focused solely on your product.
+            </p>
+          </Card>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section id="pricing" className="bg-blue-950/50 py-24">
+        <div className="mx-auto max-w-6xl text-center">
+          <h2 className="mb-12 text-3xl font-semibold">Flexible Plans</h2>
+          <div className="grid gap-8 sm:grid-cols-3">
+            <Card className="animate-fade-in-up">
+              <h3 className="mb-4 text-xl font-medium">Starter</h3>
+              <p className="mb-4 text-4xl font-bold">
+                $999<span className="text-lg font-normal">/mo</span>
+              </p>
+              <ul className="mb-6 space-y-2 text-sm text-blue-200">
+                <li>Up to 2 active requests</li>
+                <li>Email support</li>
+                <li>Basic analytics</li>
+              </ul>
+              <Button className="w-full">Choose Plan</Button>
+            </Card>
+            <Card className="animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
+              <h3 className="mb-4 text-xl font-medium">Pro</h3>
+              <p className="mb-4 text-4xl font-bold">
+                $1999<span className="text-lg font-normal">/mo</span>
+              </p>
+              <ul className="mb-6 space-y-2 text-sm text-blue-200">
+                <li>Unlimited requests</li>
+                <li>Priority support</li>
+                <li>Advanced analytics</li>
+              </ul>
+              <Button className="w-full" variant="outline">
+                Choose Plan
+              </Button>
+            </Card>
+            <Card className="animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+              <h3 className="mb-4 text-xl font-medium">Enterprise</h3>
+              <p className="mb-4 text-4xl font-bold">Custom</p>
+              <ul className="mb-6 space-y-2 text-sm text-blue-200">
+                <li>Dedicated team</li>
+                <li>Custom integrations</li>
+                <li>24/7 support</li>
+              </ul>
+              <Button className="w-full">Contact Us</Button>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="mx-auto max-w-3xl py-24 text-center">
+        <h2 className="mb-4 text-3xl font-semibold">Ready to build?</h2>
+        <p className="mb-8 text-blue-200">
+          Tell us about your project and we&apos;ll get in touch.
+        </p>
+        <form className="mx-auto flex max-w-md flex-col gap-4 animate-fade-in-up">
+          <Input type="email" placeholder="Your email" required />
+          <Input type="text" placeholder="Project details" required />
+          <Button type="submit">Send</Button>
+        </form>
+      </section>
     </div>
   );
 }
