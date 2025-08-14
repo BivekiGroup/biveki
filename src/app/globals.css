@@ -136,6 +136,3 @@
   to { transform: translateX(-50%); }
 }
 
-@utility animation:marquee {
-  animation-name: marquee;
-}

@@ -5,9 +5,9 @@ export function Marquee({ children, className, speed = 30 }: { children: React.R
   return (
     <div className={cn("relative overflow-hidden", className)}>
       <div
-        className="flex min-w-full items-center gap-8 [animation:marquee_linear_infinite]"
+        className="flex min-w-full items-center gap-8"
         style={{
-          animationDuration: `${speed}s`,
+          animation: `marquee ${speed}s linear infinite`,
         }}
       >
         <div className="flex items-center gap-8">{children}</div>
@@ -18,4 +18,3 @@ export function Marquee({ children, className, speed = 30 }: { children: React.R
     </div>
   )
 }
-
