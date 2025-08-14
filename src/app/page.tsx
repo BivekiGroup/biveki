@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Check, Sparkles, Timer, Rocket, Shield } from "lucide-react"
+import { Check, Sparkles, Timer, Rocket, Shield, Wrench, Gauge, Layers, Handshake } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,65 +9,52 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden">
-        {/* Brand hero gradient decor */}
-        <div aria-hidden className="absolute inset-0 -z-10">
-          <div
-            className="absolute left-1/2 -top-24 h-[520px] w-[820px] -translate-x-1/2 rounded-full blur-3xl opacity-35"
-            style={{
-              background:
-                "radial-gradient(45% 60% at 50% 50%, oklch(0.82 0.22 278 / 0.75) 0%, transparent 70%)",
-            }}
-          />
-          <div
-            className="absolute -left-24 top-10 h-[380px] w-[380px] rounded-full blur-2xl opacity-25"
-            style={{
-              background:
-                "radial-gradient(60% 60% at 50% 50%, oklch(0.72 0.16 240 / 0.7) 0%, transparent 70%)",
-            }}
-          />
-          <div
-            className="absolute -right-24 top-24 h-[380px] w-[380px] rounded-full blur-2xl opacity-25"
-            style={{
-              background:
-                "radial-gradient(60% 60% at 50% 50%, oklch(0.72 0.18 305 / 0.7) 0%, transparent 70%)",
-            }}
-          />
-          <div className="absolute inset-x-0 top-[440px] h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-60" />
-        </div>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-16 pb-20">
-          <div className="flex flex-col items-center text-center gap-6">
+      <section className="relative">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-24 pb-24">
+          <div className="flex flex-col items-center text-center gap-7">
             <Badge className="animate-in fade-in slide-in-from-top-2 duration-700" variant="secondary">
               Веб‑разработка по подписке
             </Badge>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight leading-[1.05] bg-gradient-to-br from-[oklch(0.9_0.22_278)] to-[oklch(0.9_0.18_240)] bg-clip-text text-transparent">
-              Современные сайты и продукты за фиксированную ежемесячную плату
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight leading-[1.03]">
+              Современные сайты и продукты по подписке
             </h1>
-            <p className="max-w-2xl text-muted-foreground text-base sm:text-lg">
+            <p className="max-w-3xl text-muted-foreground text-lg sm:text-xl">
               Команда Biveki берёт на себя весь цикл: дизайн, разработка, поддержку и развитие — быстро, прозрачно и предсказуемо.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
               <Link href="/pricing"><Button size="lg">Выбрать подписку</Button></Link>
               <Link href="/portfolio"><Button size="lg" variant="outline">Смотреть кейсы</Button></Link>
             </div>
-            <div className="mt-6 opacity-95">
-              <Image src="/logo.png" alt="Biveki" width={72} height={72} className="rounded-md shadow" />
+            <div className="mt-8 grid grid-cols-3 gap-6 text-left w-full max-w-3xl">
+              {[{i:Timer,t:"Запуск",d:"1–2 недели"},{i:Gauge,t:"Релизы",d:"еженедельно"},{i:Handshake,t:"Коммуникация",d:"в одном канале"}].map((item)=> (
+                <div key={item.t} className="rounded-lg border p-4">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    {/* @ts-expect-error dynamic icon */}
+                    <item.i className="h-4 w-4 text-primary" />
+                    {item.t}
+                  </div>
+                  <div className="mt-1 text-lg font-medium">{item.d}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Highlights */}
-      <section className="relative py-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Value props */}
+      <section className="relative py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            { icon: Timer, title: "Скорость", text: "Запуски от 1–2 недель" },
-            { icon: Rocket, title: "Гибкость", text: "Бэклог и приоритизация под вас" },
-            { icon: Shield, title: "Надёжность", text: "Поддержка и SLA по тарифу" },
-            { icon: Sparkles, title: "Качество", text: "Актуальный стек и UI" },
+            { icon: Rocket, title: "Быстрый старт", text: "Запуск MVP или сайта за 1–2 недели. Дальше — непрерывное улучшение." },
+            { icon: Layers, title: "Гибкий бэклог", text: "Вы задаёте приоритеты. Мы планируем спринты и показываем прогресс каждую неделю." },
+            { icon: Shield, title: "Надёжная поддержка", text: "Фиксированные SLA и прозрачные ожидания по каждому тарифу." },
+            { icon: Sparkles, title: "Качество UI", text: "Современный стек, акцент на UX и чистую реализацию." },
+            { icon: Wrench, title: "Интеграции", text: "Подключаем платежи, CRM, аналитики и внешние API." },
+            { icon: Timer, title: "Предсказуемость", text: "Подписка — без сюрпризов в бюджете и сроках." },
           ].map((f) => (
-            <Card key={f.title} className="">
+            <Card key={f.title}>
               <CardHeader className="flex-row items-center gap-3">
+                {/* @ts-expect-error component */}
                 <f.icon className="h-5 w-5 text-primary" />
                 <CardTitle className="text-base">{f.title}</CardTitle>
               </CardHeader>
@@ -78,18 +65,18 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section className="relative py-14">
+      <section className="relative py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="mb-8 text-center">
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">Как это работает</h2>
-            <p className="mt-2 text-muted-foreground">Простой и прозрачный процесс в 4 шага</p>
+            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">Как это работает</h2>
+            <p className="mt-2 text-muted-foreground">Прозрачный процесс. Каждую неделю — результат.</p>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { n: "01", t: "Бриф", d: "Обсуждаем цели, аудиторию и KPI" },
-              { n: "02", t: "Дизайн", d: "Готовим концепт и UI‑систему" },
-              { n: "03", t: "Разработка", d: "Верстаем и подключаем бэкенд" },
-              { n: "04", t: "Рост", d: "Эксперименты, улучшения и поддержка" },
+              { n: "01", t: "Бриф", d: "Цели, аудитория, KPI, метрики. Формируем бэклог и приоритеты." },
+              { n: "02", t: "Дизайн", d: "Концепт, UI‑кит, кликабельные прототипы. Быстрые проверки гипотез." },
+              { n: "03", t: "Разработка", d: "Сборка на Next.js. Интеграции, аналитика, деплой. Weekly релизы." },
+              { n: "04", t: "Рост", d: "A/B, SEO‑работы, улучшения конверсии. Поддержка и SLA." },
             ].map((step) => (
               <Card key={step.n}>
                 <CardHeader>
@@ -104,30 +91,45 @@ export default function Home() {
       </section>
 
       {/* Pricing preview */}
-      <section className="relative py-14">
+      <section className="relative py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="mb-8 text-center">
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">Тарифы подписки</h2>
-            <p className="mt-2 text-muted-foreground">Фиксированная стоимость, максимум прозрачности</p>
+            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">Тарифы подписки</h2>
+            <p className="mt-2 text-muted-foreground">Фиксированная стоимость, прозрачные ожидания и быстрые релизы</p>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
             {[
               {
                 name: "Start",
                 price: "$1,990",
-                features: ["Лендинг или сайт до 5 страниц", "1 итерация в неделю", "Поддержка в будни"],
+                features: [
+                  "Лендинг или сайт до 5 страниц",
+                  "1 итерация в неделю",
+                  "Поддержка в будни",
+                  "Базовая аналитика",
+                ],
                 highlight: false,
               },
               {
                 name: "Growth",
                 price: "$3,990",
-                features: ["Многостраничный сайт/продукт", "2 итерации в неделю", "Приоритетная поддержка"],
+                features: [
+                  "Многостраничный сайт/продукт",
+                  "2 итерации в неделю",
+                  "Приоритетная поддержка",
+                  "A/B эксперименты",
+                ],
                 highlight: true,
               },
               {
                 name: "Scale",
                 price: "$6,990",
-                features: ["Команда под проект", "До 3 итераций в неделю", "SLA и мониторинг"],
+                features: [
+                  "Команда под проект",
+                  "До 3 итераций в неделю",
+                  "SLA и мониторинг",
+                  "Выделенный менеджер",
+                ],
                 highlight: false,
               },
             ].map((p) => (
@@ -158,13 +160,84 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="relative py-16">
+      {/* Subscription vs classic */}
+      <section className="relative py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="mb-8 text-center">
+            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">Почему подписка лучше классики</h2>
+            <p className="mt-2 text-muted-foreground">Меньше риска, больше предсказуемости и скорости</p>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl">Подписка с Biveki</CardTitle>
+                <CardDescription>Прозрачно, быстро, без сюрпризов</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm">
+                  {["Фиксированная ставка/мес", "Еженедельные релизы", "Гибкий бэклог", "SLA поддержка", "Отмена в любой момент"].map((f)=> (
+                    <li key={f} className="flex items-start gap-2"><Check className="mt-[2px] h-4 w-4 text-primary"/> {f}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl">Классический проект</CardTitle>
+                <CardDescription>Затянувшиеся сроки и доп. сметы</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  {[
+                    "Непредсказуемые этапы",
+                    "Долгие согласования",
+                    "Доплаты за изменения",
+                    "Редкие релизы",
+                    "Слабая поддержка после запуска",
+                  ].map((f)=> (
+                    <li key={f} className="flex items-start gap-2">— {f}</li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="relative py-20">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <div className="rounded-xl border bg-card p-8 sm:p-12 text-center">
-            <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight">Готовы ускорить развитие продукта?</h3>
-            <p className="mt-2 text-muted-foreground">Подпишитесь на Biveki и получайте результат каждую неделю.</p>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <div className="mb-8 text-center">
+            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">FAQ</h2>
+            <p className="mt-2 text-muted-foreground">Частые вопросы про подписку</p>
+          </div>
+          <div className="space-y-3">
+            {[
+              {q:"Что входит в подписку?", a:"Дизайн, разработка, интеграции, базовая аналитика, поддержка по SLA."},
+              {q:"Как формируется бэклог?", a:"Вы ставите задачи — мы оцениваем и планируем спринты, показываем прогресс еженедельно."},
+              {q:"Можно ли приостанавливать?", a:"Да, можно заморозить подписку или переключить тариф."},
+              {q:"Как считаются итерации?", a:"Итерация — это согласованный объём работ на неделю с демонстрацией результата."},
+              {q:"Работаете с нашим дизайном?", a:"Да, можем брать готовые макеты или предложить свою концепцию."},
+            ].map((f)=> (
+              <details key={f.q} className="group rounded-lg border p-5 open:shadow-sm">
+                <summary className="flex cursor-pointer list-none items-center justify-between text-base font-medium">
+                  {f.q}
+                  <span className="text-muted-foreground transition-transform group-open:rotate-45">+</span>
+                </summary>
+                <p className="mt-2 text-sm text-muted-foreground">{f.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="relative py-24">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <div className="rounded-2xl border bg-card p-10 sm:p-14 text-center">
+            <h3 className="text-3xl sm:text-4xl font-semibold tracking-tight">Готовы ускорить развитие продукта?</h3>
+            <p className="mt-3 text-muted-foreground text-lg">Подписка Biveki: меньше согласований — больше релизов.</p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link href="/contact"><Button size="lg">Обсудить проект</Button></Link>
               <Link href="/pricing"><Button size="lg" variant="outline">Тарифы</Button></Link>
             </div>
