@@ -1,9 +1,14 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Check, Sparkles, Timer, Rocket, Shield, Wrench, Gauge, Layers, Handshake, Plug, Star, Quote } from "lucide-react"
+import { Check, Sparkles, Timer, Rocket, Shield, Wrench, Gauge, Layers, Handshake, Plug, Quote } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Marquee } from "@/components/site/marquee"
+import { StickyCTA } from "@/components/site/sticky-cta"
+import PricingPreview from "@/components/site/pricing-preview"
 
 export default function Home() {
   return (
@@ -11,31 +16,63 @@ export default function Home() {
       {/* Hero */}
       <section className="relative">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-24 pb-24">
-          <div className="flex flex-col items-center text-center gap-7">
-            <Badge className="animate-in fade-in slide-in-from-top-2 duration-700" variant="secondary">
-              Веб‑разработка по подписке
-            </Badge>
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-semibold tracking-tight leading-[1.03]">
-              Современные сайты и продукты по подписке
-            </h1>
-            <p className="max-w-3xl text-muted-foreground text-lg sm:text-xl">
-              Команда Biveki берёт на себя весь цикл: дизайн, разработка, поддержку и развитие — быстро, прозрачно и предсказуемо.
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link href="/pricing"><Button size="lg">Выбрать подписку</Button></Link>
-              <Link href="/portfolio"><Button size="lg" variant="outline">Смотреть кейсы</Button></Link>
-            </div>
-            <div className="mt-8 grid grid-cols-3 gap-6 text-left w-full max-w-3xl">
-              {[{i:Timer,t:"Запуск",d:"1–2 недели"},{i:Gauge,t:"Релизы",d:"еженедельно"},{i:Handshake,t:"Коммуникация",d:"в одном канале"}].map((item)=> (
-                <div key={item.t} className="rounded-lg border p-4">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    {/* @ts-expect-error dynamic icon */}
-                    <item.i className="h-4 w-4 text-primary" />
-                    {item.t}
+          <div className="grid items-center gap-10 md:grid-cols-2">
+            {/* Left: copy */}
+            <div className="flex flex-col items-start text-left gap-6">
+              <Badge className="animate-in fade-in slide-in-from-top-2 duration-700" variant="secondary">
+                Веб‑разработка по подписке
+              </Badge>
+              <h1 className="text-5xl sm:text-6xl font-semibold tracking-tight leading-[1.03]">
+                Современные сайты и продукты по подписке
+              </h1>
+              <p className="text-muted-foreground text-lg">
+                Дизайн, разработка, интеграции и поддержка по модели подписки. Предсказуемый бюджет — еженедельные релизы.
+              </p>
+              <div className="flex flex-wrap items-center gap-3">
+                <Link href="/pricing"><Button size="lg">Выбрать подписку</Button></Link>
+                <Link href="/portfolio"><Button size="lg" variant="outline">Смотреть кейсы</Button></Link>
+              </div>
+              <div className="mt-6 grid grid-cols-3 gap-4 w-full">
+                {[{i:Timer,t:"Запуск",d:"1–2 недели"},{i:Gauge,t:"Релизы",d:"еженедельно"},{i:Handshake,t:"Коммуникация",d:"в одном канале"}].map((item)=> (
+                  <div key={item.t} className="rounded-lg border p-4">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      {/* @ts-expect-error dynamic icon */}
+                      <item.i className="h-4 w-4 text-primary" />
+                      {item.t}
+                    </div>
+                    <div className="mt-1 text-lg font-medium">{item.d}</div>
                   </div>
-                  <div className="mt-1 text-lg font-medium">{item.d}</div>
+                ))}
+              </div>
+            </div>
+            {/* Right: preview */}
+            <div className="relative">
+              <div className="rounded-xl border bg-card p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="text-sm font-medium">Biveki UI</div>
+                  <Badge variant="secondary">shadcn‑style</Badge>
                 </div>
-              ))}
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {["Кнопки","Карточки","Формы","Таблицы"].map((x)=> (
+                    <div key={x} className="rounded-lg border p-4 text-sm">
+                      {x}
+                      <div className="mt-3 h-8 rounded-md bg-secondary" />
+                    </div>
+                  ))}
+                  <div className="sm:col-span-2 rounded-lg border p-4">
+                    <Tabs defaultValue="tab1">
+                      <TabsList>
+                        <TabsTrigger value="tab1">Стартапам</TabsTrigger>
+                        <TabsTrigger value="tab2">Маркетингу</TabsTrigger>
+                        <TabsTrigger value="tab3">B2B</TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="tab1" className="text-sm text-muted-foreground">Быстрый MVP, гибкий бэклог, еженедельные релизы.</TabsContent>
+                      <TabsContent value="tab2" className="text-sm text-muted-foreground">Лендинги, интеграции, эксперименты и аналитика.</TabsContent>
+                      <TabsContent value="tab3" className="text-sm text-muted-foreground">Порталы, личные кабинеты, интеграции с CRM.</TabsContent>
+                    </Tabs>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -45,10 +82,14 @@ export default function Home() {
       <section className="relative py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="text-center text-sm text-muted-foreground">Нам доверяют</div>
-          <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
-            {["FinTech", "EduTech", "E‑com", "SaaS", "B2B", "Agency"].map((c)=> (
-              <div key={c} className="flex h-16 items-center justify-center rounded-md border bg-secondary/50 text-sm text-muted-foreground">{c}</div>
-            ))}
+          <div className="mt-5">
+            <Marquee className="py-2" speed={30}>
+              {["FinTech","EduTech","E‑com","SaaS","B2B","Agency","Retail","Health","Media"].map((c)=>(
+                <div key={c} className="flex h-12 w-32 shrink-0 items-center justify-center rounded-md border bg-secondary/50 text-xs text-muted-foreground">
+                  {c}
+                </div>
+              ))}
+            </Marquee>
           </div>
         </div>
       </section>
@@ -159,22 +200,19 @@ export default function Home() {
             <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">Как это работает</h2>
             <p className="mt-2 text-muted-foreground">Прозрачный процесс. Каждую неделю — результат.</p>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { n: "01", t: "Бриф", d: "Цели, аудитория, KPI, метрики. Формируем бэклог и приоритеты." },
-              { n: "02", t: "Дизайн", d: "Концепт, UI‑кит, кликабельные прототипы. Быстрые проверки гипотез." },
-              { n: "03", t: "Разработка", d: "Сборка на Next.js. Интеграции, аналитика, деплой. Weekly релизы." },
-              { n: "04", t: "Рост", d: "A/B, SEO‑работы, улучшения конверсии. Поддержка и SLA." },
-            ].map((step) => (
-              <Card key={step.n}>
-                <CardHeader>
-                  <CardTitle className="text-sm text-muted-foreground">{step.n}</CardTitle>
-                  <CardTitle className="text-xl">{step.t}</CardTitle>
-                  <CardDescription>{step.d}</CardDescription>
-                </CardHeader>
-              </Card>
+          <Accordion>
+            {[{ n:"01", q:"Бриф", a:"Цели, аудитория, KPI, метрики. Формируем бэклог и приоритеты." },
+              { n:"02", q:"Дизайн", a:"Концепт, UI‑кит, кликабельные прототипы. Быстрые проверки гипотез." },
+              { n:"03", q:"Разработка", a:"Сборка на Next.js. Интеграции, аналитика, деплой. Weekly релизы." },
+              { n:"04", q:"Рост", a:"A/B, SEO‑работы, улучшения конверсии. Поддержка и SLA." }].map((s)=> (
+              <AccordionItem key={s.n}>
+                <AccordionTrigger>
+                  <span className="text-sm text-muted-foreground mr-2">{s.n}</span> {s.q}
+                </AccordionTrigger>
+                <AccordionContent>{s.a}</AccordionContent>
+              </AccordionItem>
             ))}
-          </div>
+          </Accordion>
         </div>
       </section>
 
@@ -185,66 +223,7 @@ export default function Home() {
             <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">Тарифы подписки</h2>
             <p className="mt-2 text-muted-foreground">Фиксированная стоимость, прозрачные ожидания и быстрые релизы</p>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              {
-                name: "Start",
-                price: "$1,990",
-                features: [
-                  "Лендинг или сайт до 5 страниц",
-                  "1 итерация в неделю",
-                  "Поддержка в будни",
-                  "Базовая аналитика",
-                ],
-                highlight: false,
-              },
-              {
-                name: "Growth",
-                price: "$3,990",
-                features: [
-                  "Многостраничный сайт/продукт",
-                  "2 итерации в неделю",
-                  "Приоритетная поддержка",
-                  "A/B эксперименты",
-                ],
-                highlight: true,
-              },
-              {
-                name: "Scale",
-                price: "$6,990",
-                features: [
-                  "Команда под проект",
-                  "До 3 итераций в неделю",
-                  "SLA и мониторинг",
-                  "Выделенный менеджер",
-                ],
-                highlight: false,
-              },
-            ].map((p) => (
-              <Card key={p.name} className={p.highlight ? "border-primary" : ""}>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-xl">{p.name}</CardTitle>
-                    {p.highlight && <Badge>Популярный</Badge>}
-                  </div>
-                  <CardDescription className="text-2xl font-semibold text-foreground">{p.price}/мес</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2 text-sm">
-                    {p.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2">
-                        <Check className="mt-[2px] h-4 w-4 text-primary" />
-                        <span>{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link href="/pricing" className="mt-6 block">
-                    <Button className="w-full">Выбрать {p.name}</Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <PricingPreview />
         </div>
       </section>
 
@@ -299,7 +278,7 @@ export default function Home() {
             <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">FAQ</h2>
             <p className="mt-2 text-muted-foreground">Частые вопросы про подписку</p>
           </div>
-          <div className="space-y-3">
+          <Accordion>
             {[
               {q:"Что входит в подписку?", a:"Дизайн, разработка, интеграции, базовая аналитика, поддержка по SLA."},
               {q:"Как формируется бэклог?", a:"Вы ставите задачи — мы оцениваем и планируем спринты, показываем прогресс еженедельно."},
@@ -307,15 +286,12 @@ export default function Home() {
               {q:"Как считаются итерации?", a:"Итерация — это согласованный объём работ на неделю с демонстрацией результата."},
               {q:"Работаете с нашим дизайном?", a:"Да, можем брать готовые макеты или предложить свою концепцию."},
             ].map((f)=> (
-              <details key={f.q} className="group rounded-lg border p-5 open:shadow-sm">
-                <summary className="flex cursor-pointer list-none items-center justify-between text-base font-medium">
-                  {f.q}
-                  <span className="text-muted-foreground transition-transform group-open:rotate-45">+</span>
-                </summary>
-                <p className="mt-2 text-sm text-muted-foreground">{f.a}</p>
-              </details>
+              <AccordionItem key={f.q}>
+                <AccordionTrigger>{f.q}</AccordionTrigger>
+                <AccordionContent>{f.a}</AccordionContent>
+              </AccordionItem>
             ))}
-          </div>
+          </Accordion>
         </div>
       </section>
 
@@ -332,6 +308,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <StickyCTA />
     </>
   )
 }
