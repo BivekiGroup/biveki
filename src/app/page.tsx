@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Check, Sparkles, Timer, Rocket, Shield, Wrench, Gauge, Layers, Handshake } from "lucide-react"
+import { Check, Sparkles, Timer, Rocket, Shield, Wrench, Gauge, Layers, Handshake, Plug, Star, Quote } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -37,6 +37,94 @@ export default function Home() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Clients / Social proof */}
+      <section className="relative py-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="text-center text-sm text-muted-foreground">Нам доверяют</div>
+          <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+            {["FinTech", "EduTech", "E‑com", "SaaS", "B2B", "Agency"].map((c)=> (
+              <div key={c} className="flex h-16 items-center justify-center rounded-md border bg-secondary/50 text-sm text-muted-foreground">{c}</div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Integrations preview */}
+      <section className="relative py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="mb-6 flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-3xl font-semibold tracking-tight">Интеграции</h2>
+              <p className="mt-2 text-muted-foreground">Подключаем инструменты, которые вы уже используете</p>
+            </div>
+            <Link href="/integrations" className="text-sm text-primary hover:underline">Все интеграции →</Link>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {["Telegram", "AmoCRM", "Bitrix24", "GA4", "Yandex Metrica", "Stripe", "ЮKassa", "CloudPayments"].map((i)=> (
+              <div key={i} className="flex items-center gap-2 rounded-md border p-4 text-sm">
+                <Plug className="h-4 w-4 text-primary" />
+                {i}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="relative py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="mb-8 text-center">
+            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">Отзывы</h2>
+            <p className="mt-2 text-muted-foreground">Что говорят клиенты о подписке Biveki</p>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              { n:"Анна", r:"CMO в e‑com", t:"Ускорили релизы, теперь каждую неделю вижу результат и могу управлять приоритетами." },
+              { n:"Игорь", r:"CEO SaaS", t:"Наконец‑то предсказуемая разработка без сюрпризов в бюджете." },
+              { n:"Мария", r:"Product Lead", t:"Команда быстро встройлась в процесс, классный UI и коммуникация в одном канале." },
+            ].map((x)=> (
+              <div key={x.n} className="rounded-lg border p-6 bg-card">
+                <Quote className="h-5 w-5 text-primary" />
+                <p className="mt-3 text-sm text-muted-foreground">{x.t}</p>
+                <div className="mt-4 text-sm font-medium">{x.n}</div>
+                <div className="text-xs text-muted-foreground">{x.r}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Blog teaser */}
+      <section className="relative py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="mb-6 flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-3xl font-semibold tracking-tight">Блог</h2>
+              <p className="mt-2 text-muted-foreground">Практика продуктовой разработки и маркетинга</p>
+            </div>
+            <Link href="/blog" className="text-sm text-primary hover:underline">Все статьи →</Link>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              {t:"Как запустить сайт за 2 недели", d:"Подход подписки и приоритизация", tag:"Продакт"},
+              {t:"Дизайн‑система за 5 шагов", d:"Компоненты, токены, ритм", tag:"Дизайн"},
+              {t:"Интеграции: что учесть", d:"Платежи, CRM, аналитика", tag:"Интеграции"},
+            ].map((p)=> (
+              <Card key={p.t}>
+                <CardHeader>
+                  <Badge variant="secondary">{p.tag}</Badge>
+                  <CardTitle className="text-xl mt-2">{p.t}</CardTitle>
+                  <CardDescription>{p.d}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Link href="/blog" className="text-sm text-primary hover:underline">Читать →</Link>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>

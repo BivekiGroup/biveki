@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "@/components/site/header";
 import { Footer } from "@/components/site/footer";
+import { AnnouncementBar } from "@/components/site/announcement";
 
 // Removed next/font to keep build offline-friendly
 
@@ -23,6 +24,7 @@ export default function RootLayout({
     <html lang="ru">
       <body className={`antialiased font-sans`}>
         <div className="relative min-h-dvh bg-background text-foreground">
+          <AnnouncementBar />
           <Header />
           <main className="relative">{children}</main>
           <Footer />
