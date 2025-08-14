@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
@@ -30,4 +31,3 @@ export function AccordionTrigger({ className, children, ...props }: React.Button
 export function AccordionContent({ className, children }: React.HTMLAttributes<HTMLDivElement>) {
   return <div className={cn("px-4 pb-4 text-sm text-muted-foreground", className)}>{children}</div>
 }
-
