@@ -24,3 +24,23 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Lightweight global animations/utilities for hero and carousel visuals */
+@keyframes floaty {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes floaty2 {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 10px 40px rgba(59, 130, 246, 0.25); }
+  50% { box-shadow: 0 10px 60px rgba(59, 130, 246, 0.45); }
+}
+
+.animate-floaty { animation: floaty 6s ease-in-out infinite; }
+.animate-floaty-delayed { animation: floaty2 7.5s ease-in-out infinite; }
+.animate-glow { animation: glow 4s ease-in-out infinite; }

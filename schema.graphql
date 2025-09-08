@@ -1,0 +1,25 @@
+type User { id: ID!, name: String!, email: String!, createdAt: String!, isAdmin: Boolean! }
+type Me { id: ID!, name: String!, email: String!, isAdmin: Boolean! }
+type AuthPayload { ok: Boolean!, token: String }
+type Contact { id: ID!, name: String!, email: String!, message: String!, reason: String, createdAt: String! }
+type Project { id: ID!, name: String!, description: String, createdAt: String! }
+
+type Query {
+  me: Me
+  user(id: ID!): User
+  users(limit: Int = 50, offset: Int = 0, search: String): [User!]!
+  contacts(reason: String, limit: Int = 20, offset: Int = 0): [Contact!]!
+  myProjects(limit: Int = 50, offset: Int = 0): [Project!]!
+}
+
+type Mutation {
+  register(name: String!, email: String!, password: String!): AuthPayload!
+  login(email: String!, password: String!): AuthPayload!
+  logout: Boolean!
+  submitContact(name: String!, email: String!, message: String!, reason: String): Boolean!
+  updateProfile(name: String!): Boolean!
+  changePassword(current: String!, next: String!): Boolean!
+  setUserAdmin(id: ID!, isAdmin: Boolean!): Boolean!
+  createProject(name: String!, description: String): Boolean!
+}
+

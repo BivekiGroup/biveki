@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ServiceCategory {
+  web
+  account
+  shop
+  integrations
+  apps
+  support
+}
+
+model User {
+  id           Int      @id @default(autoincrement()) @map("id")
+  name         String   @map("name")
+  email        String   @unique @map("email")
+  passwordHash String   @map("password_hash")
+  createdAt    DateTime @default(now()) @map("created_at")
+  isAdmin      Boolean  @default(false) @map("is_admin")
+
+  projects     Project[]
+  cases        Case[]
+
+  @@map("users")
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement()) @map("id")
+  name      String   @map("name")
+  email     String   @map("email")
+  message   String   @map("message")
+  reason    String?  @map("reason")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("contacts")
+}
+
+model Project {
+  id          Int      @id @default(autoincrement()) @map("id")
+  userId      Int      @map("user_id")
+  name        String   @map("name")
+  description String?  @map("description")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("projects")
+}
+
+model Case {
+  id        Int              @id @default(autoincrement()) @map("id")
+  authorId  Int              @map("author_id")
+  slug      String           @unique @map("slug")
+  title     String           @map("title")
+  service   ServiceCategory  @map("service")
+  summary   String           @map("summary")
+  problem   String           @map("problem")
+  solution  String           @map("solution")
+  result    String           @map("result")
+  metrics   String[]         @default([]) @map("metrics")
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime         @updatedAt @map("updated_at")
+
+  author    User             @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  media     CaseMedia[]
+
+  @@map("cases")
+}
+
+enum MediaType {
+  image
+  video
+}
+
+model CaseMedia {
+  id       Int       @id @default(autoincrement()) @map("id")
+  caseId   Int       @map("case_id")
+  type     MediaType @map("type")
+  src      String    @map("src")
+  alt      String?   @map("alt")
+  poster   String?   @map("poster")
+  order    Int       @default(0) @map("order")
+
+  case     Case      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@map("case_media")
+  @@index([caseId, order])
+}
