@@ -1,18 +1,9 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { getInternalApiBase } from "@/lib/site";
-
-async function fetchCases() {
-  const query = `query{ cases(limit: 3){ slug title summary media{ type src } } }`;
-  const res = await fetch(`${getInternalApiBase()}/api/graphql`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query }), cache: 'no-store'
-  });
-  const json = await res.json();
-  return json.data?.cases || [];
-}
+import { listCases } from "@/lib/casesRepo";
 
 export default async function Cases() {
-  const list = await fetchCases();
+  const list = await listCases({ limit: 3 });
   return (
     <section aria-label="Кейсы" className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="mb-3 flex items-end justify-between">

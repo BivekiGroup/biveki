@@ -1,27 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SERVICE_LABELS, type ServiceCategory } from "@/lib/cases";
-import { getInternalApiBase } from "@/lib/site";
+import { listCases } from "@/lib/casesRepo";
 
 const CATEGORIES: { key: ServiceCategory; label: string }[] = (
   ["web", "account", "shop", "integrations", "apps", "support"] as const
 ).map((k) => ({ key: k, label: SERVICE_LABELS[k] }));
 
-async function fetchCases(service?: string) {
-  const query = `query($service: ServiceCategory){ cases(service:$service){ slug title service summary media{ type src alt } } }`;
-  const res = await fetch(`${getInternalApiBase()}/api/graphql`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query, variables: { service: service || null } }),
-    cache: 'no-store',
-  });
-  const json = await res.json();
-  return json.data?.cases || [];
-}
-
 export default async function CasesPage({ searchParams }: { searchParams: { service?: ServiceCategory } }) {
   const active = (searchParams?.service || 'all') as 'all' | ServiceCategory;
-  const list = await fetchCases(active === 'all' ? undefined : active);
+  const list = await listCases(active === 'all' ? undefined : { service: active });
 
   return (
     <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">

@@ -1,14 +1,9 @@
 import { UserRound, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import { getInternalApiBase } from "@/lib/site";
+import { listCases } from "@/lib/casesRepo";
 
 async function fetchCases() {
-  const res = await fetch(`${getInternalApiBase()}/api/graphql`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query: `query{ cases(service:account, limit: 2){ slug title summary } }` }), cache: 'no-store'
-  });
-  const json = await res.json();
-  return json.data?.cases || [];
+  return listCases({ service: 'account' as any, limit: 2 });
 }
 
 const ADVANTAGES = [
