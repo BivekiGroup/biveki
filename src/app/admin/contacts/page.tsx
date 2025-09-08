@@ -10,10 +10,14 @@ const Q = gql`
   }
 `;
 
+type Contact = { id: string; name: string; email: string; message: string; reason?: string | null; createdAt: string };
+
 export default function AdminContactsPage() {
-  const [reason, setReason] = useState<string|undefined>(undefined);
-  const { data, refetch } = useQuery(Q, { variables: { reason, limit: 50, offset: 0 } });
-  const list = data?.contacts || [];
+  const [reason, setReason] = useState<string | undefined>(undefined);
+  const { data, refetch } = useQuery<{ contacts: Contact[] }, { reason?: string; limit: number; offset: number }>(Q, {
+    variables: { reason, limit: 50, offset: 0 },
+  });
+  const list: Contact[] = data?.contacts || [];
 
   return (
     <main className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10">
@@ -25,14 +29,14 @@ export default function AdminContactsPage() {
           {k: 'referral', label: 'Партнёрство'},
           {k: 'career', label: 'Карьера'},
         ].map((r)=> (
-          <button key={String(r.k)} onClick={()=>{ setReason(r.k as any); refetch({ reason: r.k }); }} className={`inline-flex items-center rounded-full border px-3 py-1 text-sm ${reason===r.k? 'border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-300':'border-neutral-900/10 bg-white/70 text-neutral-800 dark:border-white/10 dark:bg-white/[0.06] dark:text-neutral-200'}`}>
+          <button key={String(r.k)} onClick={()=>{ setReason(r.k); refetch({ reason: r.k }); }} className={`inline-flex items-center rounded-full border px-3 py-1 text-sm ${reason===r.k? 'border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-300':'border-neutral-900/10 bg-white/70 text-neutral-800 dark:border-white/10 dark:bg-white/[0.06] dark:text-neutral-200'}`}>
             {r.label}
           </button>
         ))}
       </div>
 
       <div className="mt-4 grid gap-3">
-        {list.map((c:any)=> (
+        {list.map((c)=> (
           <article key={c.id} className="rounded-2xl border border-neutral-900/10 bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.06]">
             <div className="flex items-center justify-between">
               <div className="text-sm font-semibold">{c.name} <span className="ml-2 font-normal text-neutral-600 dark:text-neutral-400">{c.email}</span></div>
@@ -46,4 +50,3 @@ export default function AdminContactsPage() {
     </main>
   );
 }
-
