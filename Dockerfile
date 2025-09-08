@@ -32,6 +32,5 @@ RUN mkdir -p /app/public/uploads && chown -R node:node /app/public
 
 USER node
 EXPOSE 3000
-# Run migrations then start Next standalone server
-CMD sh -c "npx prisma migrate deploy && node server.js"
-
+# Start Next standalone server
+CMD ["node", "server.js"]
