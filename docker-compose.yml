@@ -1,25 +1,10 @@
 version: "3.9"
 
 services:
-  migrate:
-    build:
-      context: .
-      target: builder
-    container_name: biveki_migrate
-    restart: "no"
-    env_file:
-      - stack.env
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-    command: ["npx", "prisma", "migrate", "deploy"]
-
   web:
     build: .
     container_name: biveki_web
     restart: unless-stopped
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
     env_file:
       - stack.env
     environment:
