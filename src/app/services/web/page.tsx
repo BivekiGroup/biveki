@@ -1,8 +1,9 @@
 import { Globe, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import { getInternalApiBase } from "@/lib/site";
 
 async function fetchCases() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/graphql`, {
+  const res = await fetch(`${getInternalApiBase()}/api/graphql`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query: `query{ cases(service:web, limit: 2){ slug title summary } }` }), cache: 'no-store'
   });

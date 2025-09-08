@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SERVICE_LABELS, type ServiceCategory } from "@/lib/cases";
+import { getInternalApiBase } from "@/lib/site";
 
 const CATEGORIES: { key: ServiceCategory; label: string }[] = (
   ["web", "account", "shop", "integrations", "apps", "support"] as const
@@ -8,7 +9,7 @@ const CATEGORIES: { key: ServiceCategory; label: string }[] = (
 
 async function fetchCases(service?: string) {
   const query = `query($service: ServiceCategory){ cases(service:$service){ slug title service summary media{ type src alt } } }`;
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/graphql`, {
+  const res = await fetch(`${getInternalApiBase()}/api/graphql`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query, variables: { service: service || null } }),

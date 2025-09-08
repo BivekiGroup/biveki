@@ -2,9 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SERVICE_LABELS, type ServiceCategory } from "@/lib/cases";
+import { getInternalApiBase } from "@/lib/site";
 
 async function fetchCase(slug: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/graphql`, {
+  const res = await fetch(`${getInternalApiBase()}/api/graphql`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query: `query($slug:String!){ case(slug:$slug){ slug title service summary problem solution result metrics media{ type src alt poster } } }`, variables: { slug } }),
     cache: 'no-store',
