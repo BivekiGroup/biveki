@@ -5,6 +5,8 @@ import Advantages from "../components/Advantages";
 import Cases from "../components/Cases";
 import CTABand from "../components/CTABand";
 
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   return (
     <main>

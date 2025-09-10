@@ -3,6 +3,8 @@ import Link from "next/link";
 import { SERVICE_LABELS, type ServiceCategory } from "@/lib/cases";
 import { listCases } from "@/lib/casesRepo";
 
+export const dynamic = 'force-dynamic';
+
 const CATEGORIES: { key: ServiceCategory; label: string }[] = (
   ["web", "account", "shop", "integrations", "apps", "support"] as const
 ).map((k) => ({ key: k, label: SERVICE_LABELS[k] }));

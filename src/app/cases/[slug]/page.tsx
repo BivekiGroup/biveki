@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { SERVICE_LABELS, type ServiceCategory } from "@/lib/cases";
 import { getCaseBySlug } from "@/lib/casesRepo";
 
+export const dynamic = 'force-dynamic';
+
 export default async function CaseDetail({ params }: { params: { slug: string } }) {
   const item = await getCaseBySlug(params.slug);
   if (!item) return notFound();

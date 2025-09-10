@@ -2,6 +2,8 @@ import { Shield, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { listCases } from "@/lib/casesRepo";
 
+export const dynamic = 'force-dynamic';
+
 async function fetchCases() {
   return listCases({ service: 'support' as any, limit: 2 });
 }
