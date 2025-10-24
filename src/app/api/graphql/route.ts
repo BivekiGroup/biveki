@@ -26,6 +26,12 @@ const typeDefs = /* GraphQL */ `#graphql
     solution: String!
     result: String!
     metrics: [String!]!
+    client: String
+    tags: [String!]!
+    tech: [String!]!
+    year: Int
+    externalUrl: String
+    published: Boolean!
     media: [CaseMedia!]!
     createdAt: String!
     updatedAt: String!
@@ -55,11 +61,13 @@ const typeDefs = /* GraphQL */ `#graphql
 
     createCase(
       slug: String!, title: String!, service: ServiceCategory!,
-      summary: String!, problem: String!, solution: String!, result: String!, metrics: [String!]
+      summary: String!, problem: String!, solution: String!, result: String!, metrics: [String!],
+      client: String, tags: [String!], tech: [String!], year: Int, externalUrl: String, published: Boolean
     ): Boolean!
     updateCase(
       id: ID!, slug: String!, title: String!, service: ServiceCategory!,
-      summary: String!, problem: String!, solution: String!, result: String!, metrics: [String!]
+      summary: String!, problem: String!, solution: String!, result: String!, metrics: [String!],
+      client: String, tags: [String!], tech: [String!], year: Int, externalUrl: String, published: Boolean
     ): Boolean!
     deleteCase(id: ID!): Boolean!
     setCaseMedia(caseId: ID!, media: [CaseMediaInput!]!): Boolean!
@@ -81,6 +89,9 @@ const slugSchema = z.string().min(1).max(200).regex(/^[a-z0-9-]+$/);
 const serviceSchema = z.enum(["web","account","shop","integrations","apps","support"] as const);
 const longText = z.string().min(1).max(8000);
 const metricsSchema = z.array(z.string().min(1).max(200)).max(12).optional();
+const optionalStringArray = z.array(z.string().min(1).max(100)).max(20).optional();
+const optionalInt = z.number().int().min(1900).max(3000).optional();
+const optionalUrl = z.string().url().max(500).optional();
 const mediaInputSchema = z.array(z.object({
   type: z.enum(["image","video"] as const),
   src: z.string().min(1).max(500),
@@ -136,8 +147,15 @@ const resolvers = {
       });
       return list.map(p => ({ id: p.id, name: p.name, description: p.description, createdAt: p.createdAt.toISOString() }));
     },
-    cases: async (_: any, { service, limit, offset, search }: any) => {
+    cases: async (_: any, { service, limit, offset, search }: any, ctx: any) => {
       const where: any = {};
+      // Only show published on public, all for admins
+      if (ctx.user) {
+        const me = await prisma.user.findUnique({ where: { id: Number(ctx.user.uid) } });
+        if (!me?.isAdmin) where.published = true;
+      } else {
+        where.published = true;
+      }
       if (service) where.service = service;
       if (search) {
         where.OR = [
@@ -162,6 +180,12 @@ const resolvers = {
         solution: c.solution,
         result: c.result,
         metrics: c.metrics,
+        client: c.client,
+        tags: c.tags,
+        tech: c.tech,
+        year: c.year,
+        externalUrl: c.externalUrl,
+        published: c.published,
         media: c.media.map(m => ({ id: m.id, type: m.type, src: m.src, alt: m.alt, poster: m.poster })),
         createdAt: c.createdAt.toISOString(),
         updatedAt: c.updatedAt.toISOString(),
@@ -180,6 +204,12 @@ const resolvers = {
         solution: c.solution,
         result: c.result,
         metrics: c.metrics,
+        client: c.client,
+        tags: c.tags,
+        tech: c.tech,
+        year: c.year,
+        externalUrl: c.externalUrl,
+        published: c.published,
         media: c.media.map(m => ({ id: m.id, type: m.type, src: m.src, alt: m.alt, poster: m.poster })),
         createdAt: c.createdAt.toISOString(),
         updatedAt: c.updatedAt.toISOString(),
@@ -302,6 +332,10 @@ const resolvers = {
       longText.parse(args.solution);
       longText.parse(args.result);
       if (args.metrics !== undefined) metricsSchema.parse(args.metrics);
+      if (args.tags !== undefined) optionalStringArray.parse(args.tags);
+      if (args.tech !== undefined) optionalStringArray.parse(args.tech);
+      if (args.year !== undefined) optionalInt.parse(args.year);
+      if (args.externalUrl !== undefined) optionalUrl.parse(args.externalUrl);
       await prisma.case.create({
         data: {
           authorId: me.id,
@@ -313,6 +347,12 @@ const resolvers = {
           solution: args.solution,
           result: args.result,
           metrics: args.metrics || [],
+          client: args.client || null,
+          tags: args.tags || [],
+          tech: args.tech || [],
+          year: args.year || null,
+          externalUrl: args.externalUrl || null,
+          published: Boolean(args.published) || false,
         },
       });
       return true;
@@ -329,6 +369,10 @@ const resolvers = {
       longText.parse(args.solution);
       longText.parse(args.result);
       if (args.metrics !== undefined) metricsSchema.parse(args.metrics);
+      if (args.tags !== undefined) optionalStringArray.parse(args.tags);
+      if (args.tech !== undefined) optionalStringArray.parse(args.tech);
+      if (args.year !== undefined) optionalInt.parse(args.year);
+      if (args.externalUrl !== undefined) optionalUrl.parse(args.externalUrl);
       await prisma.case.update({
         where: { id },
         data: {
@@ -340,6 +384,12 @@ const resolvers = {
           solution: args.solution,
           result: args.result,
           metrics: args.metrics || [],
+          client: args.client || null,
+          tags: args.tags || [],
+          tech: args.tech || [],
+          year: args.year || null,
+          externalUrl: args.externalUrl || null,
+          published: Boolean(args.published) || false,
         },
       });
       return true;

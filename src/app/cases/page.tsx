@@ -65,6 +65,7 @@ export default async function CasesPage({ searchParams }: { searchParams: { serv
               </div>
               <div className="p-4">
                 <div className="text-sm font-semibold tracking-tight line-clamp-2">{item.title}</div>
+                {item.client ? (<div className="mt-0.5 text-[11px] text-neutral-600 dark:text-neutral-400">{item.client}{item.year? ` · ${item.year}`: ''}</div>) : null}
                 <div className="mt-1 line-clamp-2 text-xs text-neutral-600 dark:text-neutral-400">{item.summary}</div>
                 <div className="mt-3">
                   <span className="inline-flex items-center rounded-full border border-neutral-900/10 px-2 py-0.5 text-[11px] text-neutral-800 dark:border-white/10 dark:text-neutral-200">

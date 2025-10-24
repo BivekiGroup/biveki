@@ -13,17 +13,17 @@ export default function EditCasePage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [caseId, setCaseId] = useState<string>("");
-  const [form, setForm] = useState({ slug: "", title: "", service: "web", summary: "", problem: "", solution: "", result: "", metrics: "" });
+  const [form, setForm] = useState({ slug: "", title: "", service: "web", summary: "", problem: "", solution: "", result: "", metrics: "", client: "", tags: "", tech: "", year: "", externalUrl: "", published: false });
   const [media, setMedia] = useState<Media[]>([]);
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch('/api/graphql', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query: `query($slug:String!){ case(slug:$slug){ id slug title service summary problem solution result metrics media{ id type src alt poster } } }`, variables: { slug } }) });
+        const res = await fetch('/api/graphql', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query: `query($slug:String!){ case(slug:$slug){ id slug title service summary problem solution result metrics client tags tech year externalUrl published media{ id type src alt poster } } }`, variables: { slug } }) });
         const data = (await res.json()).data?.case;
         if (!data) { router.replace('/admin/cases'); return; }
         setCaseId(data.id);
-        setForm({ slug: data.slug, title: data.title, service: data.service, summary: data.summary, problem: data.problem, solution: data.solution, result: data.result, metrics: (data.metrics||[]).join(', ') });
+        setForm({ slug: data.slug, title: data.title, service: data.service, summary: data.summary, problem: data.problem, solution: data.solution, result: data.result, metrics: (data.metrics||[]).join(', '), client: data.client || '', tags: (data.tags||[]).join(', '), tech: (data.tech||[]).join(', '), year: data.year? String(data.year): '', externalUrl: data.externalUrl || '', published: Boolean(data.published) });
         setMedia((data.media||[]).map((m:any)=>({ id: m.id, type: m.type, src: m.src, alt: m.alt || '', poster: m.poster || '' })));
       } finally {
         setLoading(false);
@@ -35,7 +35,10 @@ export default function EditCasePage() {
     e.preventDefault();
     setSaving(true);
     const metrics = form.metrics.split(",").map(s=>s.trim()).filter(Boolean);
-    await fetch('/api/graphql', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query: `mutation U($id:ID!,$slug:String!,$title:String!,$service:ServiceCategory!,$summary:String!,$problem:String!,$solution:String!,$result:String!,$metrics:[String!]){ updateCase(id:$id,slug:$slug,title:$title,service:$service,summary:$summary,problem:$problem,solution:$solution,result:$result,metrics:$metrics) }`, variables: { id: caseId, slug: form.slug, title: form.title, service: form.service, summary: form.summary, problem: form.problem, solution: form.solution, result: form.result, metrics } }) });
+    const tags = form.tags.split(",").map(s=>s.trim()).filter(Boolean);
+    const tech = form.tech.split(",").map(s=>s.trim()).filter(Boolean);
+    const year = form.year ? Number(form.year) : null;
+    await fetch('/api/graphql', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query: `mutation U($id:ID!,$slug:String!,$title:String!,$service:ServiceCategory!,$summary:String!,$problem:String!,$solution:String!,$result:String!,$metrics:[String!],$client:String,$tags:[String!],$tech:[String!],$year:Int,$externalUrl:String,$published:Boolean){ updateCase(id:$id,slug:$slug,title:$title,service:$service,summary:$summary,problem:$problem,solution:$solution,result:$result,metrics:$metrics,client:$client,tags:$tags,tech:$tech,year:$year,externalUrl:$externalUrl,published:$published) }`, variables: { id: caseId, slug: form.slug, title: form.title, service: form.service, summary: form.summary, problem: form.problem, solution: form.solution, result: form.result, metrics, client: form.client || null, tags, tech, year, externalUrl: form.externalUrl || null, published: form.published } }) });
     await fetch('/api/graphql', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query: `mutation M($id:ID!,$m:[CaseMediaInput!]!){ setCaseMedia(caseId:$id, media:$m) }`, variables: { id: caseId, m: media.map((m)=>({ type: m.type, src: m.src, alt: m.alt || null, poster: m.poster || null })) } }) });
     setSaving(false);
     if (form.slug !== slug) router.replace(`/admin/cases/${form.slug}`);
@@ -111,6 +114,33 @@ export default function EditCasePage() {
         <label className="grid gap-1 text-sm">
           <span>Метрики (через запятую)</span>
           <input value={form.metrics} onChange={(e)=>setForm({...form, metrics: e.target.value })} className="h-10 rounded-md border border-neutral-900/10 px-3 dark:border-white/10" />
+        </label>
+
+        <label className="grid gap-1 text-sm">
+          <span>Клиент</span>
+          <input value={form.client} onChange={(e)=>setForm({...form, client: e.target.value })} className="h-10 rounded-md border border-neutral-900/10 px-3 dark:border-white/10" />
+        </label>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <label className="grid gap-1 text-sm">
+            <span>Теги</span>
+            <input value={form.tags} onChange={(e)=>setForm({...form, tags: e.target.value })} className="h-10 rounded-md border border-neutral-900/10 px-3 dark:border-white/10" />
+          </label>
+          <label className="grid gap-1 text-sm">
+            <span>Технологии</span>
+            <input value={form.tech} onChange={(e)=>setForm({...form, tech: e.target.value })} className="h-10 rounded-md border border-neutral-900/10 px-3 dark:border-white/10" />
+          </label>
+          <label className="grid gap-1 text-sm">
+            <span>Год</span>
+            <input value={form.year} onChange={(e)=>setForm({...form, year: e.target.value })} className="h-10 rounded-md border border-neutral-900/10 px-3 dark:border-white/10" />
+          </label>
+        </div>
+        <label className="grid gap-1 text-sm">
+          <span>Ссылка (внешняя)</span>
+          <input value={form.externalUrl} onChange={(e)=>setForm({...form, externalUrl: e.target.value })} className="h-10 rounded-md border border-neutral-900/10 px-3 dark:border-white/10" />
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input type="checkbox" checked={form.published} onChange={(e)=>setForm({...form, published: e.target.checked })} />
+          <span>Опубликовано</span>
         </label>
 
         <div className="mt-2">

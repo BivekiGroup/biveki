@@ -64,6 +64,13 @@ model Case {
   solution  String           @map("solution")
   result    String           @map("result")
   metrics   String[]         @default([]) @map("metrics")
+  // Extra presentation fields
+  client    String?          @map("client")
+  tags      String[]         @default([]) @map("tags")
+  tech      String[]         @default([]) @map("tech")
+  year      Int?             @map("year")
+  externalUrl String?        @map("external_url")
+  published Boolean          @default(false) @map("published")
   createdAt DateTime         @default(now()) @map("created_at")
   updatedAt DateTime         @updatedAt @map("updated_at")
 

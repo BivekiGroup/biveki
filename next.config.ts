@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
     // Allow production builds to succeed even if there are TS type errors
     ignoreBuildErrors: true,
   },
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 's3.twcstorage.ru' },
+    ],
+  },
 };
 
 export default nextConfig;

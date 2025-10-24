@@ -21,6 +21,9 @@ export default async function CaseDetail({ params }: { params: { slug: string } 
       </nav>
 
       <h1 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">{item.title}</h1>
+      {item.client ? (
+        <div className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">{item.client}{item.year? ` · ${item.year}`: ''}</div>
+      ) : null}
       <div className="mt-2">
         <span className="inline-flex items-center rounded-full border border-neutral-900/10 px-2 py-0.5 text-[11px] text-neutral-800 dark:border-white/10 dark:text-neutral-200">
           {SERVICE_LABELS[item.service as ServiceCategory]}
@@ -48,6 +51,15 @@ export default async function CaseDetail({ params }: { params: { slug: string } 
       <section className="mt-6">
         <h2 className="text-xl font-semibold tracking-tight">Решение</h2>
         <p className="mt-2 text-sm leading-6 text-neutral-700 dark:text-neutral-300">{item.solution}</p>
+        {item.tech?.length ? (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {item.tech.map((t) => (
+              <span key={t} className="inline-flex items-center rounded-full border border-neutral-900/10 px-2 py-0.5 text-[11px] text-neutral-800 dark:border-white/10 dark:text-neutral-200">
+                {t}
+              </span>
+            ))}
+          </div>
+        ) : null}
       </section>
       <section className="mt-6">
         <h2 className="text-xl font-semibold tracking-tight">Результат</h2>

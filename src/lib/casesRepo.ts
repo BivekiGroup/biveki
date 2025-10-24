@@ -4,7 +4,9 @@ import type { ServiceCategory } from '@/lib/cases';
 export async function listCases(opts?: { service?: ServiceCategory; limit?: number; offset?: number }) {
   const take = Math.min(Math.max(opts?.limit ?? 100, 1), 200);
   const skip = Math.max(opts?.offset ?? 0, 0);
-  const where = opts?.service ? { service: opts.service as any } : undefined;
+  const where: any = {};
+  if (opts?.service) where.service = opts.service as any;
+  where.published = true;
   const list = await prisma.case.findMany({
     where,
     orderBy: { createdAt: 'desc' },
@@ -22,6 +24,11 @@ export async function listCases(opts?: { service?: ServiceCategory; limit?: numb
     solution: c.solution,
     result: c.result,
     metrics: c.metrics,
+    client: c.client || undefined,
+    tags: c.tags,
+    tech: c.tech,
+    year: c.year || undefined,
+    externalUrl: c.externalUrl || undefined,
     media: c.media.map((m) => ({ id: m.id, type: m.type, src: m.src, alt: m.alt || undefined, poster: m.poster || undefined })),
     createdAt: c.createdAt,
     updatedAt: c.updatedAt,
@@ -29,7 +36,7 @@ export async function listCases(opts?: { service?: ServiceCategory; limit?: numb
 }
 
 export async function getCaseBySlug(slug: string) {
-  const c = await prisma.case.findUnique({ where: { slug }, include: { media: { orderBy: { order: 'asc' } } } });
+  const c = await prisma.case.findFirst({ where: { slug, published: true } as any, include: { media: { orderBy: { order: 'asc' } } } });
   if (!c) return null;
   return {
     id: c.id,
@@ -41,9 +48,13 @@ export async function getCaseBySlug(slug: string) {
     solution: c.solution,
     result: c.result,
     metrics: c.metrics,
+    client: c.client || undefined,
+    tags: c.tags,
+    tech: c.tech,
+    year: c.year || undefined,
+    externalUrl: c.externalUrl || undefined,
     media: c.media.map((m) => ({ id: m.id, type: m.type, src: m.src, alt: m.alt || undefined, poster: m.poster || undefined })),
     createdAt: c.createdAt,
     updatedAt: c.updatedAt,
   };
 }
-

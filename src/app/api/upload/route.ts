@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 import { verifySession } from "@/lib/auth";
+import { uploadToS3 } from "@/lib/s3";
 
 export const runtime = 'nodejs';
 
@@ -31,6 +32,14 @@ export async function POST(req: NextRequest) {
     const ext = path.extname(origName || '').slice(1).toLowerCase();
     const safeExt = ext && /^[a-z0-9]+$/.test(ext) ? ext : 'bin';
     const id = randomId(18);
+    const s3Bucket = process.env.S3_BUCKET;
+    const s3Endpoint = process.env.S3_ENDPOINT;
+    if (s3Bucket && s3Endpoint) {
+      const key = `${folder}/${id}.${safeExt}`;
+      const up = await uploadToS3({ bucket: s3Bucket, key, body: buf, contentType: (file as any).type || undefined });
+      if (!up.ok) return new Response('Upload failed', { status: 500 });
+      return Response.json({ ok: true, path: up.url, name: `${id}.${safeExt}` });
+    }
     const relDir = path.join('public', 'uploads', folder);
     const absDir = path.join(process.cwd(), relDir);
     await fs.mkdir(absDir, { recursive: true });

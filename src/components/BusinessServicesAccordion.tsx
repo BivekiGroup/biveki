@@ -12,44 +12,44 @@ type Item = {
 const ITEMS: Item[] = [
   {
     k: "web",
-    title: "Сайты и лендинги",
-    teaser: "От посадочных страниц до многостраничных сайтов с воронкой",
-    bullets: ["Аналитика и структура", "Дизайн и контент", "SEO‑основа, замеры"],
+    title: "Корпоративные сайты и порталы",
+    teaser: "Многостраничные сайты, презентационные решения, информационные порталы",
+    bullets: ["Проектирование архитектуры", "Адаптивный дизайн", "SEO-оптимизация, аналитика"],
     icon: "web",
   },
   {
     k: "account",
-    title: "Личные кабинеты и порталы",
-    teaser: "Закрытые разделы для клиентов и партнёров",
-    bullets: ["Роли и права", "Профили, уведомления", "Интеграция с CRM"],
+    title: "Клиентские порталы и ЛК",
+    teaser: "Защищённые системы для клиентов, партнёров и сотрудников",
+    bullets: ["Управление доступом", "Личные кабинеты", "Интеграция с корп. системами"],
     icon: "account",
   },
   {
     k: "shop",
-    title: "Интернет‑магазины и оплата",
-    teaser: "Каталог, корзина, оплата и доставка",
-    bullets: ["Категории и фильтры", "Оплаты, чеки", "Склад и CRM"],
+    title: "E-commerce платформы",
+    teaser: "Интернет-магазины, системы заказов, платёжные модули",
+    bullets: ["Каталог и фильтрация", "Платёжные шлюзы", "Интеграция с учётными системами"],
     icon: "shop",
   },
   {
     k: "integrations",
-    title: "Интеграции и автоматизация",
-    teaser: "Соединяем сервисы и упрощаем процессы",
-    bullets: ["CRM/ERP", "Платёжные системы", "Боты и webhooks"],
+    title: "Интеграции и API",
+    teaser: "Связка систем, автоматизация процессов, обмен данными",
+    bullets: ["CRM/ERP интеграции", "REST/GraphQL API", "Webhook-уведомления"],
     icon: "integrations",
   },
   {
     k: "apps",
     title: "Мобильные и десктопные приложения",
-    teaser: "iOS, Android, Windows, macOS",
-    bullets: ["Пуш‑уведомления", "Офлайн‑режим", "Автообновления"],
+    teaser: "Нативные и кроссплатформенные решения для всех ОС",
+    bullets: ["iOS, Android разработка", "Офлайн-функционал", "Push-уведомления"],
     icon: "apps",
   },
   {
     k: "support",
-    title: "Поддержка и развитие (SLA)",
-    teaser: "Берём стабильность и рост на себя",
-    bullets: ["Мониторинг и алерты", "Бэклог улучшений", "Отчётность"],
+    title: "Техническая поддержка и SLA",
+    teaser: "Гарантированная стабильность, мониторинг, плановое развитие",
+    bullets: ["24/7 мониторинг", "Инцидент-менеджмент", "Регулярная отчётность"],
     icon: "support",
   },
 ];
@@ -73,45 +73,45 @@ function Icon({ type }: { type: Item["icon"] }) {
 
 export default function BusinessServicesAccordion() {
   return (
-    <section aria-label="Услуги — список" className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div className="mb-2 flex items-end justify-between">
-        <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">Что мы делаем</h2>
-        <Link href="/services" className="hidden text-sm font-medium text-blue-700 hover:underline dark:text-blue-300 sm:inline-flex">
+    <section aria-label="Спектр услуг" className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mb-6 flex items-end justify-between">
+        <h2 className="text-2xl font-bold text-neutral-900 dark:text-neutral-50 sm:text-3xl">Спектр услуг</h2>
+        <Link href="/services" className="hidden text-sm font-medium text-blue-600 dark:text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 sm:inline-flex">
           Все услуги →
         </Link>
       </div>
-      <div className="divide-y divide-neutral-900/10 rounded-2xl border border-neutral-900/10 bg-white/70 dark:divide-white/10 dark:border-white/10 dark:bg-white/[0.06]">
+      <div className="divide-y divide-neutral-200 dark:divide-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900">
         {ITEMS.map((it) => (
           <details key={it.k} className="group">
-            <summary className="flex cursor-pointer list-none items-start gap-3 px-4 py-4 sm:gap-4 sm:px-5">
-              <span className="mt-0.5 inline-flex h-8 w-8 flex-none items-center justify-center rounded-full bg-blue-600 text-white">
+            <summary className="flex cursor-pointer list-none items-start gap-4 px-5 py-5 hover:bg-neutral-50 dark:hover:bg-neutral-800/50">
+              <span className="mt-0.5 inline-flex h-9 w-9 flex-none items-center justify-center rounded-lg bg-blue-600 text-white">
                 <Icon type={it.icon} />
               </span>
               <span className="min-w-0 flex-1">
                 <span className="flex items-center justify-between gap-2">
-                  <span className="truncate text-base font-semibold text-neutral-900 dark:text-white">{it.title}</span>
-                  <ChevronDown className="h-4 w-4 flex-none text-neutral-500 transition-transform" />
+                  <span className="text-base font-semibold text-neutral-900 dark:text-neutral-50">{it.title}</span>
+                  <ChevronDown className="h-4 w-4 flex-none text-neutral-400 dark:text-neutral-600 transition-transform group-open:rotate-180" />
                 </span>
-                <span className="mt-0.5 block truncate text-sm text-neutral-600 dark:text-neutral-300">{it.teaser}</span>
+                <span className="mt-1 block text-sm text-neutral-600 dark:text-neutral-400">{it.teaser}</span>
               </span>
             </summary>
-            <div className="px-4 pb-4 sm:px-5">
-              <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2">
+            <div className="px-5 pb-5 pt-2 bg-neutral-50 dark:bg-neutral-800/30">
+              <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2 mb-4">
                 {it.bullets.map((b) => (
-                  <li key={b} className="inline-flex items-center gap-2 text-sm text-neutral-800 dark:text-neutral-200">
-                    <span className="inline-flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 text-white">
-                      <Check size={12} />
+                  <li key={b} className="flex items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300">
+                    <span className="inline-flex h-5 w-5 flex-none items-center justify-center rounded bg-blue-600 text-white">
+                      <Check size={14} />
                     </span>
                     {b}
                   </li>
                 ))}
               </ul>
-              <div className="mt-3 flex gap-2">
-                <Link href="/contacts" className="inline-flex h-10 items-center rounded-full bg-gradient-to-r from-blue-600 to-blue-500 px-4 text-sm font-semibold text-white hover:from-blue-700 hover:to-blue-600">
-                  Оценить проект
+              <div className="flex gap-3 pt-2">
+                <Link href="/contacts" className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+                  Обсудить проект
                 </Link>
-                <Link href="/cases" className="inline-flex h-10 items-center rounded-full border border-neutral-900/10 px-4 text-sm font-medium text-neutral-800 hover:bg-neutral-950/[0.04] dark:border-white/10 dark:text-neutral-100 dark:hover:bg-white/[0.06]">
-                  Примеры кейсов
+                <Link href="/cases" className="inline-flex items-center justify-center rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-4 py-2 text-sm font-semibold text-neutral-900 dark:text-neutral-50 hover:bg-neutral-50 dark:hover:bg-neutral-800">
+                  Примеры работ
                 </Link>
               </div>
             </div>

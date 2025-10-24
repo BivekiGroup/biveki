@@ -9,91 +9,137 @@ export const dynamic = 'force-dynamic';
 
 export default function Home() {
   return (
-    <main>
-      <section className="relative overflow-hidden">
-        {/* Clean minimal background */}
+    <main className="bg-white dark:bg-neutral-950">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden border-b border-neutral-200 dark:border-neutral-800">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-          {/* soft radial vignette */}
-          <div className="absolute left-1/2 top-8 h-[260px] w-[520px] -translate-x-1/2 rounded-full bg-[radial-gradient(60%_60%_at_50%_50%,rgba(59,130,246,0.20)_0%,rgba(59,130,246,0)_70%)]" />
-          {/* subtle grid */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.06)_1px,transparent_1px)] bg-[size:36px_36px] opacity-[0.04] dark:opacity-[0.08]" />
+          {/* Subtle gradient accent */}
+          <div className="absolute left-0 top-0 h-[600px] w-full bg-gradient-to-br from-blue-50/50 via-transparent to-transparent dark:from-blue-950/20" />
+          {/* Minimal grid */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#262626_1px,transparent_1px),linear-gradient(to_bottom,#262626_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] opacity-20" />
         </div>
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-8 sm:pb-10">
-          <span className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-[11px] font-medium uppercase tracking-wide text-blue-700 dark:text-blue-300">
-            Biveki • Digital Products
-          </span>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 lg:pt-20 pb-16 sm:pb-20 lg:pb-24">
+          <div className="max-w-4xl">
+            {/* Professional badge */}
+            <div className="inline-flex items-center gap-2 rounded-md border border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-900/50 px-3 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300 backdrop-blur-sm">
+              <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
+              Разработка корпоративных digital-решений
+            </div>
 
-          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-50 sm:text-5xl sm:leading-tight">
-            Создаём <span className="bg-gradient-to-r from-blue-600 to-sky-500 bg-clip-text text-transparent">цифровые продукты</span>,
-            которые двигают бизнес вперёд
-          </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-6 text-neutral-700 dark:text-neutral-300 sm:text-base">
-            От стратегии и дизайна до разработки, внедрения и SLA‑поддержки. Работаем быстро, прозрачно и с упором на бизнес‑метрики.
-          </p>
+            {/* Main value proposition */}
+            <h1 className="mt-8 text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 leading-tight">
+              Превращаем бизнес-задачи в{" "}
+              <span className="text-blue-600 dark:text-blue-500">технологические решения</span>
+            </h1>
 
-          {/* Feature chips (без повторов со слайдером) */}
-          <div className="mt-5 flex flex-wrap gap-2">
-            {["Аналитика", "UX/UI", "Front‑end", "Back‑end", "Интеграции"].map((f) => (
-              <span
-                key={f}
-                className="inline-flex items-center rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-xs font-medium text-blue-700 dark:text-blue-300"
+            <p className="mt-6 text-lg sm:text-xl leading-relaxed text-neutral-600 dark:text-neutral-400 max-w-3xl">
+              Полный цикл разработки от аналитики и проектирования до запуска в production и технической поддержки.
+              Работаем с фокусом на бизнес-метрики и долгосрочное масштабирование.
+            </p>
+
+            {/* Key metrics */}
+            <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-8 max-w-3xl">
+              <div>
+                <div className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-50">50+</div>
+                <div className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Реализованных проектов</div>
+              </div>
+              <div>
+                <div className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-50">5+</div>
+                <div className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Лет опыта команды</div>
+              </div>
+              <div>
+                <div className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-50">24/7</div>
+                <div className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">SLA поддержка</div>
+              </div>
+              <div>
+                <div className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-50">98%</div>
+                <div className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Успешных внедрений</div>
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div className="mt-12 flex flex-wrap gap-4">
+              <Link
+                href="/contacts"
+                className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors"
               >
-                {f}
-              </span>
-            ))}
-          </div>
+                Обсудить проект
+              </Link>
+              <Link
+                href="/cases"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-6 py-3.5 text-sm font-semibold text-neutral-900 dark:text-neutral-50 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+              >
+                Портфолио
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link
-              href="/services"
-              className="inline-flex h-11 items-center rounded-full bg-gradient-to-r from-blue-600 to-blue-500 px-5 text-sm font-semibold text-white shadow-sm hover:from-blue-700 hover:to-blue-600"
-            >
-              Услуги
-            </Link>
-            <Link
-              href="/contacts"
-              className="inline-flex h-11 items-center rounded-full border border-neutral-900/10 dark:border-white/10 px-5 text-sm font-medium text-neutral-800 dark:text-neutral-100 hover:bg-neutral-950/[0.04] dark:hover:bg-white/[0.06]"
-            >
-              Связаться
-            </Link>
-            <Link
-              href="/cases"
-              className="inline-flex h-11 items-center rounded-full px-2 text-sm font-medium text-blue-700 hover:underline dark:text-blue-300"
-            >
-              Кейсы →
-            </Link>
+            {/* Tech stack */}
+            <div className="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
+              <p className="text-xs font-medium uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-4">Стек технологий</p>
+              <div className="flex flex-wrap gap-3">
+                {[
+                  "React / Next.js",
+                  "Node.js",
+                  "TypeScript",
+                  "PostgreSQL",
+                  "GraphQL",
+                  "Docker",
+                  "AWS / Azure",
+                  "Kubernetes"
+                ].map((tech) => (
+                  <span
+                    key={tech}
+                    className="inline-flex items-center rounded-md bg-neutral-100 dark:bg-neutral-800 px-3 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
-
-          {/* Accent underline */}
-          <div className="mt-8 h-px w-full max-w-xl bg-gradient-to-r from-blue-600/60 to-transparent" />
         </div>
       </section>
 
-      {/* USP Cards */}
-      <div className="mt-3 sm:mt-4">
+      {/* Value proposition cards */}
+      <section className="py-16 sm:py-20 lg:py-24">
         <UspShowcase />
-      </div>
-
-      {/* Business Services — Accordion (clean, non-technical) */}
-      <div className="mt-4 sm:mt-5">
-        <BusinessServicesAccordion />
-      </div>
-
-      {/* Advantages */}
-      <div className="mt-5 sm:mt-6">
-        <Advantages />
-      </div>
+      </section>
 
       {/* Cases */}
-      <div className="mt-5 sm:mt-6">
-        <Cases />
-      </div>
+      <section className="py-16 sm:py-20 lg:py-24 bg-neutral-50 dark:bg-neutral-900/50">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50">
+              Реализованные проекты
+            </h2>
+            <p className="mt-4 text-lg text-neutral-600 dark:text-neutral-400">
+              Примеры внедрённых решений с измеримыми результатами для бизнеса
+            </p>
+          </div>
+        </div>
+        <div className="mt-12">
+          <Cases />
+        </div>
+      </section>
+
+      {/* Services */}
+      <section className="py-16 sm:py-20 lg:py-24">
+        <BusinessServicesAccordion />
+      </section>
+
+      {/* Advantages */}
+      <section className="py-16 sm:py-20 lg:py-24 bg-neutral-50 dark:bg-neutral-900/50">
+        <Advantages />
+      </section>
 
       {/* CTA */}
-      <div className="mt-5 sm:mt-6 mb-8 sm:mb-10">
+      <section className="py-16 sm:py-20">
         <CTABand variant="contact" />
-      </div>
+      </section>
     </main>
   );
 }

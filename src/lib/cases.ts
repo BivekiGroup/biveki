@@ -19,6 +19,11 @@ export type CaseItem = {
   solution: string;
   result: string;
   metrics?: string[];
+  client?: string;
+  tags?: string[];
+  tech?: string[];
+  year?: number;
+  externalUrl?: string;
   media: Media[];
 };
 
