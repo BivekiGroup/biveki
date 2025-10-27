@@ -56,6 +56,7 @@ export default function Footer() {
                 <li><Link href="/clients" className="hover:underline">Клиенты</Link></li>
                 <li><Link href="/privacy" className="hover:underline">Политика конфиденциальности</Link></li>
                 <li><Link href="/terms" className="hover:underline">Пользовательское соглашение</Link></li>
+                <li><Link href="/offer" className="hover:underline">Публичная оферта</Link></li>
               </ul>
             </div>
 

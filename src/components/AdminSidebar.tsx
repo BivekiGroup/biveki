@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Users, Mail, LogOut, LayoutDashboard } from "lucide-react";
+import { Users, Mail, LogOut, LayoutDashboard, FolderKanban } from "lucide-react";
 
 export default function AdminSidebar({ user }: { user: { name: string; email: string } | null }) {
   const pathname = usePathname();
   const NAV = [
     { href: "/dashboard", label: "Кабинет", icon: LayoutDashboard },
     { href: "/admin/cases", label: "Кейсы", icon: LayoutDashboard },
+    { href: "/admin/projects", label: "Проекты", icon: FolderKanban },
     { href: "/admin/users", label: "Пользователи", icon: Users },
     { href: "/admin/contacts", label: "Заявки", icon: Mail },
   ];

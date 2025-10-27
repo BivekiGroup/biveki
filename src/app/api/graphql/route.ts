@@ -6,14 +6,72 @@ import { createSession, verifySession } from "@/lib/auth";
 import bcrypt from "bcryptjs";
 
 const typeDefs = /* GraphQL */ `#graphql
-  type User { id: ID!, name: String!, email: String!, createdAt: String!, isAdmin: Boolean! }
-  type Me { id: ID!, name: String!, email: String!, isAdmin: Boolean! }
+  type User { id: ID!, name: String!, email: String!, createdAt: String!, isAdmin: Boolean!, avatarUrl: String }
+  type Me { id: ID!, name: String!, email: String!, isAdmin: Boolean!, avatarUrl: String, clientProfile: ClientProfile }
   type AuthPayload { ok: Boolean!, token: String }
   type Contact { id: ID!, name: String!, email: String!, message: String!, reason: String, createdAt: String! }
-  type Project { id: ID!, name: String!, description: String, createdAt: String! }
+  type Project {
+    id: ID!
+    name: String!
+    description: String
+    createdAt: String!
+    tasks: [Task!]!
+    milestones: [Milestone!]!
+    files: [ProjectFile!]!
+  }
+
+  enum TaskStatus { TODO IN_PROGRESS REVIEW DONE }
+  enum TaskPriority { LOW MEDIUM HIGH URGENT }
+
+  type Task {
+    id: ID!
+    projectId: Int!
+    title: String!
+    description: String
+    status: TaskStatus!
+    priority: TaskPriority!
+    milestoneId: Int
+    dueDate: String
+    createdAt: String!
+    updatedAt: String!
+  }
+
+  type Milestone {
+    id: ID!
+    projectId: Int!
+    name: String!
+    description: String
+    dueDate: String
+    createdAt: String!
+    tasks: [Task!]!
+  }
+
+  type ProjectFile {
+    id: ID!
+    projectId: Int!
+    filename: String!
+    url: String!
+    size: Int!
+    mimeType: String!
+    createdAt: String!
+  }
 
   enum ServiceCategory { web account shop integrations apps support }
   enum MediaType { image video }
+  enum ClientType { INDIVIDUAL LEGAL }
+
+  type ClientProfile {
+    id: ID!
+    type: ClientType!
+    lastName: String
+    firstName: String
+    middleName: String
+    inn: String
+    companyName: String
+    legalAddress: String
+    bik: String
+    accountNumber: String
+  }
 
   type CaseMedia { id: ID!, type: MediaType!, src: String!, alt: String, poster: String }
   type Case {
@@ -37,12 +95,24 @@ const typeDefs = /* GraphQL */ `#graphql
     updatedAt: String!
   }
 
+  type ProjectWithUser {
+    id: ID!
+    name: String!
+    description: String
+    createdAt: String!
+    user: User!
+    tasksCount: Int!
+    milestonesCount: Int!
+  }
+
   type Query {
     me: Me
     user(id: ID!): User
     users(limit: Int = 50, offset: Int = 0, search: String): [User!]!
     contacts(reason: String, limit: Int = 20, offset: Int = 0): [Contact!]!
     myProjects(limit: Int = 50, offset: Int = 0): [Project!]!
+    allProjects(limit: Int = 50, offset: Int = 0, search: String): [ProjectWithUser!]!
+    project(id: Int!): Project
     cases(service: ServiceCategory, limit: Int = 100, offset: Int = 0, search: String): [Case!]!
     case(slug: String!): Case
   }
@@ -53,11 +123,31 @@ const typeDefs = /* GraphQL */ `#graphql
     logout: Boolean!
     submitContact(name: String!, email: String!, message: String!, reason: String): Boolean!
     updateProfile(name: String!): Boolean!
+    updateAvatar(avatarUrl: String!): Boolean!
+    updateClientProfile(
+      type: ClientType!
+      lastName: String
+      firstName: String
+      middleName: String
+      inn: String
+      companyName: String
+      legalAddress: String
+      bik: String
+      accountNumber: String
+    ): Boolean!
     changePassword(current: String!, next: String!): Boolean!
     setUserAdmin(id: ID!, isAdmin: Boolean!): Boolean!
     updateUser(id: ID!, name: String!, email: String!): Boolean!
     deleteUser(id: ID!): Boolean!
     createProject(name: String!, description: String): Boolean!
+
+    createTask(projectId: Int!, title: String!, description: String, status: TaskStatus, priority: TaskPriority, milestoneId: Int, dueDate: String): Task!
+    updateTask(id: Int!, title: String, description: String, status: TaskStatus, priority: TaskPriority, milestoneId: Int, dueDate: String): Task!
+    deleteTask(id: Int!): Boolean!
+
+    createMilestone(projectId: Int!, name: String!, description: String, dueDate: String): Milestone!
+    updateMilestone(id: Int!, name: String, description: String, dueDate: String): Milestone!
+    deleteMilestone(id: Int!): Boolean!
 
     createCase(
       slug: String!, title: String!, service: ServiceCategory!,
@@ -85,6 +175,12 @@ const messageSchema = z.string().min(3).max(4000);
 const reasonSchema = z.string().min(0).max(120).optional();
 const projectNameSchema = z.string().min(1).max(200);
 const projectDescSchema = z.string().min(0).max(2000).optional();
+const taskTitleSchema = z.string().min(1).max(200);
+const taskDescSchema = z.string().min(0).max(2000).optional();
+const taskStatusSchema = z.enum(["TODO", "IN_PROGRESS", "REVIEW", "DONE"] as const).optional();
+const taskPrioritySchema = z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"] as const).optional();
+const milestoneNameSchema = z.string().min(1).max(200);
+const milestoneDescSchema = z.string().min(0).max(2000).optional();
 const slugSchema = z.string().min(1).max(200).regex(/^[a-z0-9-]+$/);
 const serviceSchema = z.enum(["web","account","shop","integrations","apps","support"] as const);
 const longText = z.string().min(1).max(8000);
@@ -103,9 +199,30 @@ const resolvers = {
   Query: {
     me: async (_: any, __: any, ctx: any) => {
       if (!ctx.user) return null;
-      const u = await prisma.user.findUnique({ where: { id: Number(ctx.user.uid) } });
+      const u = await prisma.user.findUnique({
+        where: { id: Number(ctx.user.uid) },
+        include: { clientProfile: true }
+      });
       if (!u) return null;
-      return { id: u.id, name: u.name, email: u.email, isAdmin: u.isAdmin };
+      return {
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        isAdmin: u.isAdmin,
+        avatarUrl: u.avatarUrl,
+        clientProfile: u.clientProfile ? {
+          id: u.clientProfile.id,
+          type: u.clientProfile.type,
+          lastName: u.clientProfile.lastName,
+          firstName: u.clientProfile.firstName,
+          middleName: u.clientProfile.middleName,
+          inn: u.clientProfile.inn,
+          companyName: u.clientProfile.companyName,
+          legalAddress: u.clientProfile.legalAddress,
+          bik: u.clientProfile.bik,
+          accountNumber: u.clientProfile.accountNumber,
+        } : null
+      };
     },
     user: async (_: any, { id }: any) => {
       const u = await prisma.user.findUnique({ where: { id: Number(id) } });
@@ -146,6 +263,116 @@ const resolvers = {
         skip: Math.max(Number(offset) || 0, 0),
       });
       return list.map(p => ({ id: p.id, name: p.name, description: p.description, createdAt: p.createdAt.toISOString() }));
+    },
+    allProjects: async (_: any, { limit, offset, search }: any, ctx: any) => {
+      if (!ctx.user) throw new Error("unauthorized");
+      const me = await prisma.user.findUnique({ where: { id: Number(ctx.user.uid) } });
+      if (!me?.isAdmin) throw new Error("forbidden");
+
+      const where: any = {};
+      if (search) {
+        where.OR = [
+          { name: { contains: search, mode: 'insensitive' as any } },
+          { description: { contains: search, mode: 'insensitive' as any } },
+        ];
+      }
+
+      const projects = await prisma.project.findMany({
+        where,
+        include: {
+          user: true,
+          _count: {
+            select: { tasks: true, milestones: true }
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: Math.min(Math.max(Number(limit) || 50, 1), 200),
+        skip: Math.max(Number(offset) || 0, 0),
+      });
+
+      return projects.map(p => ({
+        id: p.id,
+        name: p.name,
+        description: p.description,
+        createdAt: p.createdAt.toISOString(),
+        user: {
+          id: p.user.id,
+          name: p.user.name,
+          email: p.user.email,
+          createdAt: p.user.createdAt.toISOString(),
+          isAdmin: p.user.isAdmin,
+          avatarUrl: p.user.avatarUrl,
+        },
+        tasksCount: p._count.tasks,
+        milestonesCount: p._count.milestones,
+      }));
+    },
+    project: async (_: any, { id }: any, ctx: any) => {
+      if (!ctx.user) throw new Error("unauthorized");
+
+      // Админ может смотреть любые проекты, клиент - только свои
+      const me = await prisma.user.findUnique({ where: { id: Number(ctx.user.uid) } });
+      const where: any = { id: Number(id) };
+      if (!me?.isAdmin) {
+        where.userId = Number(ctx.user.uid);
+      }
+
+      const project = await prisma.project.findFirst({
+        where,
+        include: {
+          tasks: { orderBy: { createdAt: 'desc' } },
+          milestones: { orderBy: { createdAt: 'desc' }, include: { tasks: true } },
+          files: { orderBy: { createdAt: 'desc' } },
+        }
+      });
+      if (!project) return null;
+      return {
+        id: project.id,
+        name: project.name,
+        description: project.description,
+        createdAt: project.createdAt.toISOString(),
+        tasks: project.tasks.map(t => ({
+          id: t.id,
+          projectId: t.projectId,
+          title: t.title,
+          description: t.description,
+          status: t.status,
+          priority: t.priority,
+          milestoneId: t.milestoneId,
+          dueDate: t.dueDate?.toISOString(),
+          createdAt: t.createdAt.toISOString(),
+          updatedAt: t.updatedAt.toISOString(),
+        })),
+        milestones: project.milestones.map(m => ({
+          id: m.id,
+          projectId: m.projectId,
+          name: m.name,
+          description: m.description,
+          dueDate: m.dueDate?.toISOString(),
+          createdAt: m.createdAt.toISOString(),
+          tasks: m.tasks.map(t => ({
+            id: t.id,
+            projectId: t.projectId,
+            title: t.title,
+            description: t.description,
+            status: t.status,
+            priority: t.priority,
+            milestoneId: t.milestoneId,
+            dueDate: t.dueDate?.toISOString(),
+            createdAt: t.createdAt.toISOString(),
+            updatedAt: t.updatedAt.toISOString(),
+          })),
+        })),
+        files: project.files.map(f => ({
+          id: f.id,
+          projectId: f.projectId,
+          filename: f.filename,
+          url: f.url,
+          size: f.size,
+          mimeType: f.mimeType,
+          createdAt: f.createdAt.toISOString(),
+        })),
+      };
     },
     cases: async (_: any, { service, limit, offset, search }: any, ctx: any) => {
       const where: any = {};
@@ -272,6 +499,45 @@ const resolvers = {
       await prisma.user.update({ where: { id: Number(ctx.user.uid) }, data: { name } });
       return true;
     },
+    updateAvatar: async (_: any, { avatarUrl }: any, ctx: any) => {
+      if (!ctx.user) throw new Error("unauthorized");
+      const urlSchema = z.string().url().max(500);
+      urlSchema.parse(avatarUrl);
+      await prisma.user.update({ where: { id: Number(ctx.user.uid) }, data: { avatarUrl } });
+      return true;
+    },
+    updateClientProfile: async (_: any, args: any, ctx: any) => {
+      if (!ctx.user) throw new Error("unauthorized");
+      const typeSchema = z.enum(["INDIVIDUAL", "LEGAL"] as const);
+      typeSchema.parse(args.type);
+
+      // Validate fields based on type
+      const data: any = { type: args.type };
+
+      if (args.type === "INDIVIDUAL") {
+        if (args.lastName) data.lastName = z.string().min(1).max(100).parse(args.lastName);
+        if (args.firstName) data.firstName = z.string().min(1).max(100).parse(args.firstName);
+        if (args.middleName) data.middleName = z.string().min(1).max(100).parse(args.middleName);
+      } else {
+        if (args.inn) data.inn = z.string().min(1).max(20).parse(args.inn);
+        if (args.companyName) data.companyName = z.string().min(1).max(200).parse(args.companyName);
+        if (args.legalAddress) data.legalAddress = z.string().min(1).max(500).parse(args.legalAddress);
+      }
+
+      if (args.bik) data.bik = z.string().min(1).max(20).parse(args.bik);
+      if (args.accountNumber) data.accountNumber = z.string().min(1).max(30).parse(args.accountNumber);
+
+      const userId = Number(ctx.user.uid);
+      const existing = await prisma.clientProfile.findUnique({ where: { userId } });
+
+      if (existing) {
+        await prisma.clientProfile.update({ where: { userId }, data });
+      } else {
+        await prisma.clientProfile.create({ data: { userId, ...data } });
+      }
+
+      return true;
+    },
     changePassword: async (_: any, { current, next }: any, ctx: any) => {
       if (!ctx.user) throw new Error("unauthorized");
       passwordSchema.parse(current);
@@ -319,6 +585,222 @@ const resolvers = {
       projectNameSchema.parse(name);
       if (description !== undefined) projectDescSchema.parse(description);
       await prisma.project.create({ data: { userId: Number(ctx.user.uid), name, description: description || null } });
+      return true;
+    },
+    createTask: async (_: any, args: any, ctx: any) => {
+      if (!ctx.user) throw new Error("unauthorized");
+      taskTitleSchema.parse(args.title);
+      if (args.description !== undefined) taskDescSchema.parse(args.description);
+      if (args.status !== undefined) taskStatusSchema.parse(args.status);
+      if (args.priority !== undefined) taskPrioritySchema.parse(args.priority);
+
+      // Verify project belongs to user
+      const project = await prisma.project.findFirst({
+        where: { id: Number(args.projectId), userId: Number(ctx.user.uid) }
+      });
+      if (!project) throw new Error("project_not_found");
+
+      const task = await prisma.task.create({
+        data: {
+          projectId: Number(args.projectId),
+          title: args.title,
+          description: args.description || null,
+          status: args.status || "TODO",
+          priority: args.priority || "MEDIUM",
+          milestoneId: args.milestoneId ? Number(args.milestoneId) : null,
+          dueDate: args.dueDate ? new Date(args.dueDate) : null,
+        }
+      });
+
+      return {
+        id: task.id,
+        projectId: task.projectId,
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        priority: task.priority,
+        milestoneId: task.milestoneId,
+        dueDate: task.dueDate?.toISOString(),
+        createdAt: task.createdAt.toISOString(),
+        updatedAt: task.updatedAt.toISOString(),
+      };
+    },
+    updateTask: async (_: any, args: any, ctx: any) => {
+      if (!ctx.user) throw new Error("unauthorized");
+
+      // Verify task belongs to user's project
+      const task = await prisma.task.findUnique({
+        where: { id: Number(args.id) },
+        include: { project: true }
+      });
+      if (!task || task.project.userId !== Number(ctx.user.uid)) {
+        throw new Error("task_not_found");
+      }
+
+      const updateData: any = {};
+      if (args.title !== undefined) {
+        taskTitleSchema.parse(args.title);
+        updateData.title = args.title;
+      }
+      if (args.description !== undefined) {
+        taskDescSchema.parse(args.description);
+        updateData.description = args.description || null;
+      }
+      if (args.status !== undefined) {
+        taskStatusSchema.parse(args.status);
+        updateData.status = args.status;
+      }
+      if (args.priority !== undefined) {
+        taskPrioritySchema.parse(args.priority);
+        updateData.priority = args.priority;
+      }
+      if (args.milestoneId !== undefined) {
+        updateData.milestoneId = args.milestoneId ? Number(args.milestoneId) : null;
+      }
+      if (args.dueDate !== undefined) {
+        updateData.dueDate = args.dueDate ? new Date(args.dueDate) : null;
+      }
+
+      const updated = await prisma.task.update({
+        where: { id: Number(args.id) },
+        data: updateData,
+      });
+
+      return {
+        id: updated.id,
+        projectId: updated.projectId,
+        title: updated.title,
+        description: updated.description,
+        status: updated.status,
+        priority: updated.priority,
+        milestoneId: updated.milestoneId,
+        dueDate: updated.dueDate?.toISOString(),
+        createdAt: updated.createdAt.toISOString(),
+        updatedAt: updated.updatedAt.toISOString(),
+      };
+    },
+    deleteTask: async (_: any, { id }: any, ctx: any) => {
+      if (!ctx.user) throw new Error("unauthorized");
+
+      // Verify task belongs to user's project
+      const task = await prisma.task.findUnique({
+        where: { id: Number(id) },
+        include: { project: true }
+      });
+      if (!task || task.project.userId !== Number(ctx.user.uid)) {
+        throw new Error("task_not_found");
+      }
+
+      await prisma.task.delete({ where: { id: Number(id) } });
+      return true;
+    },
+    createMilestone: async (_: any, args: any, ctx: any) => {
+      if (!ctx.user) throw new Error("unauthorized");
+      milestoneNameSchema.parse(args.name);
+      if (args.description !== undefined) milestoneDescSchema.parse(args.description);
+
+      // Verify project belongs to user
+      const project = await prisma.project.findFirst({
+        where: { id: Number(args.projectId), userId: Number(ctx.user.uid) }
+      });
+      if (!project) throw new Error("project_not_found");
+
+      const milestone = await prisma.milestone.create({
+        data: {
+          projectId: Number(args.projectId),
+          name: args.name,
+          description: args.description || null,
+          dueDate: args.dueDate ? new Date(args.dueDate) : null,
+        },
+        include: { tasks: true }
+      });
+
+      return {
+        id: milestone.id,
+        projectId: milestone.projectId,
+        name: milestone.name,
+        description: milestone.description,
+        dueDate: milestone.dueDate?.toISOString(),
+        createdAt: milestone.createdAt.toISOString(),
+        tasks: milestone.tasks.map(t => ({
+          id: t.id,
+          projectId: t.projectId,
+          title: t.title,
+          description: t.description,
+          status: t.status,
+          priority: t.priority,
+          milestoneId: t.milestoneId,
+          dueDate: t.dueDate?.toISOString(),
+          createdAt: t.createdAt.toISOString(),
+          updatedAt: t.updatedAt.toISOString(),
+        })),
+      };
+    },
+    updateMilestone: async (_: any, args: any, ctx: any) => {
+      if (!ctx.user) throw new Error("unauthorized");
+
+      // Verify milestone belongs to user's project
+      const milestone = await prisma.milestone.findUnique({
+        where: { id: Number(args.id) },
+        include: { project: true, tasks: true }
+      });
+      if (!milestone || milestone.project.userId !== Number(ctx.user.uid)) {
+        throw new Error("milestone_not_found");
+      }
+
+      const updateData: any = {};
+      if (args.name !== undefined) {
+        milestoneNameSchema.parse(args.name);
+        updateData.name = args.name;
+      }
+      if (args.description !== undefined) {
+        milestoneDescSchema.parse(args.description);
+        updateData.description = args.description || null;
+      }
+      if (args.dueDate !== undefined) {
+        updateData.dueDate = args.dueDate ? new Date(args.dueDate) : null;
+      }
+
+      const updated = await prisma.milestone.update({
+        where: { id: Number(args.id) },
+        data: updateData,
+        include: { tasks: true }
+      });
+
+      return {
+        id: updated.id,
+        projectId: updated.projectId,
+        name: updated.name,
+        description: updated.description,
+        dueDate: updated.dueDate?.toISOString(),
+        createdAt: updated.createdAt.toISOString(),
+        tasks: updated.tasks.map(t => ({
+          id: t.id,
+          projectId: t.projectId,
+          title: t.title,
+          description: t.description,
+          status: t.status,
+          priority: t.priority,
+          milestoneId: t.milestoneId,
+          dueDate: t.dueDate?.toISOString(),
+          createdAt: t.createdAt.toISOString(),
+          updatedAt: t.updatedAt.toISOString(),
+        })),
+      };
+    },
+    deleteMilestone: async (_: any, { id }: any, ctx: any) => {
+      if (!ctx.user) throw new Error("unauthorized");
+
+      // Verify milestone belongs to user's project
+      const milestone = await prisma.milestone.findUnique({
+        where: { id: Number(id) },
+        include: { project: true }
+      });
+      if (!milestone || milestone.project.userId !== Number(ctx.user.uid)) {
+        throw new Error("milestone_not_found");
+      }
+
+      await prisma.milestone.delete({ where: { id: Number(id) } });
       return true;
     },
     createCase: async (_: any, args: any, ctx: any) => {

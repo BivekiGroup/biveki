@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ApolloProviders from "../components/ApolloProviders";
 import SiteChrome from "../components/SiteChrome";
+import { ToastProvider } from "../components/ToastProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,11 +30,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ApolloProviders>
-          <SiteChrome>
-            {children}
-          </SiteChrome>
-        </ApolloProviders>
+        <ToastProvider>
+          <ApolloProviders>
+            <SiteChrome>
+              {children}
+            </SiteChrome>
+          </ApolloProviders>
+        </ToastProvider>
       </body>
     </html>
   );

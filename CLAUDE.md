@@ -98,6 +98,7 @@ Email-адреса в переменной `ADMIN_EMAILS` автоматичес
 
 Опциональные:
 - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` - Отправка email уведомлений ([src/lib/mailer.ts](src/lib/mailer.ts))
+- `DADATA_API_KEY` - API ключ DaData для автоподсказок ФИО ([src/app/api/dadata/fio/route.ts](src/app/api/dadata/fio/route.ts))
 
 ## Конфигурация Next.js
 

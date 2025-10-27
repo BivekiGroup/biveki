@@ -2,6 +2,7 @@
 
 import { Mail, Phone, Send, Github, Linkedin, MessageCircle, ShieldCheck, Clock, Copy, Check, ArrowUpRight } from "lucide-react";
 import { useMemo, useState } from "react";
+import Link from "next/link";
 
 export default function ContactsPage() {
   const [loading, setLoading] = useState(false);
@@ -186,12 +187,26 @@ export default function ContactsPage() {
               <label className="text-xs text-neutral-600 dark:text-neutral-400">Сообщение</label>
               <textarea name="message" required rows={5} className="rounded-lg border border-neutral-900/10 bg-transparent px-3 py-2 text-sm outline-none focus:border-blue-500/50 dark:border-white/10" />
             </div>
+
+            <label className="flex items-start gap-2 text-xs text-neutral-600 dark:text-neutral-400">
+              <input type="checkbox" name="acceptOffer" required className="mt-0.5 h-4 w-4 rounded border-neutral-900/10 text-blue-600 focus:ring-blue-500 dark:border-white/10" />
+              <span>
+                Я ознакомлен(а) и согласен(на) с условиями{" "}
+                <Link href="/offer" target="_blank" className="text-blue-600 hover:underline dark:text-blue-400">
+                  Публичной оферты
+                </Link>
+                {" "}и{" "}
+                <Link href="/privacy" target="_blank" className="text-blue-600 hover:underline dark:text-blue-400">
+                  Политики конфиденциальности
+                </Link>
+              </span>
+            </label>
+
             <div className="flex items-center gap-2">
               <button disabled={loading} className="inline-flex h-10 items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-sky-500 px-4 text-sm font-semibold text-white shadow-sm hover:from-blue-700 hover:to-sky-600 disabled:opacity-60">
                 <Send size={16} />
                 Отправить
               </button>
-              <span className="text-[11px] text-neutral-500 dark:text-neutral-400">Нажимая «Отправить», вы соглашаетесь с обработкой персональных данных.</span>
             </div>
           </div>
         </form>

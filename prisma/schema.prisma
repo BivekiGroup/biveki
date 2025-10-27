@@ -16,6 +16,11 @@ enum ServiceCategory {
   support
 }
 
+enum ClientType {
+  INDIVIDUAL // Физлицо
+  LEGAL      // Юрлицо/ИП
+}
+
 model User {
   id           Int      @id @default(autoincrement()) @map("id")
   name         String   @map("name")
@@ -23,11 +28,40 @@ model User {
   passwordHash String   @map("password_hash")
   createdAt    DateTime @default(now()) @map("created_at")
   isAdmin      Boolean  @default(false) @map("is_admin")
+  avatarUrl    String?  @map("avatar_url")
 
-  projects     Project[]
-  cases        Case[]
+  projects      Project[]
+  cases         Case[]
+  clientProfile ClientProfile?
 
   @@map("users")
+}
+
+model ClientProfile {
+  id        Int        @id @default(autoincrement()) @map("id")
+  userId    Int        @unique @map("user_id")
+  type      ClientType @map("type")
+
+  // Физлицо
+  lastName   String? @map("last_name")
+  firstName  String? @map("first_name")
+  middleName String? @map("middle_name")
+
+  // Юрлицо/ИП
+  inn           String? @map("inn")
+  companyName   String? @map("company_name")
+  legalAddress  String? @map("legal_address")
+
+  // Общие реквизиты
+  bik           String? @map("bik")
+  accountNumber String? @map("account_number")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("client_profiles")
 }
 
 model Contact {
@@ -48,9 +82,72 @@ model Project {
   description String?  @map("description")
   createdAt   DateTime @default(now()) @map("created_at")
 
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+  milestones  Milestone[]
+  files       ProjectFile[]
 
   @@map("projects")
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Task {
+  id          Int          @id @default(autoincrement()) @map("id")
+  projectId   Int          @map("project_id")
+  title       String       @map("title")
+  description String?      @map("description")
+  status      TaskStatus   @default(TODO) @map("status")
+  priority    TaskPriority @default(MEDIUM) @map("priority")
+  milestoneId Int?         @map("milestone_id")
+  dueDate     DateTime?    @map("due_date")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  milestone   Milestone?   @relation(fields: [milestoneId], references: [id], onDelete: SetNull)
+
+  @@map("tasks")
+}
+
+model Milestone {
+  id          Int       @id @default(autoincrement()) @map("id")
+  projectId   Int       @map("project_id")
+  name        String    @map("name")
+  description String?   @map("description")
+  dueDate     DateTime? @map("due_date")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+
+  @@map("milestones")
+}
+
+model ProjectFile {
+  id          Int      @id @default(autoincrement()) @map("id")
+  projectId   Int      @map("project_id")
+  filename    String   @map("filename")
+  url         String   @map("url")
+  size        Int      @map("size")
+  mimeType    String   @map("mime_type")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("project_files")
 }
 
 model Case {

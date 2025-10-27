@@ -44,3 +44,40 @@ body {
 .animate-floaty { animation: floaty 6s ease-in-out infinite; }
 .animate-floaty-delayed { animation: floaty2 7.5s ease-in-out infinite; }
 .animate-glow { animation: glow 4s ease-in-out infinite; }
+
+/* Toast animations */
+@keyframes slide-in-from-right-full {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-in {
+  animation-fill-mode: both;
+}
+
+.slide-in-from-right-full {
+  animation-name: slide-in-from-right-full;
+}
+
+.fade-in {
+  animation-name: fade-in;
+}
+
+.duration-300 {
+  animation-duration: 300ms;
+}
